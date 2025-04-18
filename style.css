@@ -22,45 +22,59 @@ header {
   background-color: #0C2E1C;
   color: white;
   padding: 1em 2em;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
   gap: 20px;
+  white-space: nowrap;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .logo {
-  max-width: 80px;
-  width: 100%;
+  width: 8vw;
+  min-width: 50px;
   height: auto;
+  flex-shrink: 0;
+}
+
+.header-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-width: 0;
+  flex-grow: 1;
+  overflow: hidden;
 }
 
 .header-text h1 {
   margin: 0;
-  font-size: 2em;
+  font-size: 2.5vw;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tagline {
   font-style: italic;
-  font-size: 1em;
-  margin: 0.3em 0;
+  font-size: 1.5vw;
+  margin: 0.2em 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* === HERO BANNER === */
-.hero {
-  margin-bottom: -30px; /* brings next section up */
-}
-
-.hero .banner {
-  width: 100%;
-  max-height: 250px;
-  object-fit: cover;
-  display: block;
-  opacity: 0.3;
-  transition: opacity 0.3s ease, max-height 0.3s ease;
-}
 
 /* === MAIN CONTENT === */
 main {
@@ -120,23 +134,19 @@ footer {
 /* === RESPONSIVENESS === */
 @media (max-width: 768px) {
   .header-content {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
   }
 
   .header-text h1 {
-    font-size: 1.5em;
+    font-size: 4vw;
   }
 
   .tagline {
-    font-size: 0.9em;
-    text-align: center;
+    font-size: 2.5vw;
+    text-align: left;
   }
 
-  .hero .banner {
-    max-height: 180px;
-    opacity: 0.25;
-  }
 
   .skills-grid {
     grid-template-columns: 1fr;
@@ -148,5 +158,19 @@ footer {
 
   section {
     margin-bottom: 1.5em;
+  }
+}
+
+@media (max-width: 500px) {
+  .header-text h1 {
+    font-size: 4.5vw;
+  }
+
+  .tagline {
+    font-size: 3vw;
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
   }
 }
