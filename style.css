@@ -1,35 +1,93 @@
 body {
-    font-family: Consolas, monospace;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5; /* light grey */
-    color: #222;
-  }
-  
-  header {
-    background-color: #0C2E1C; /* dark green from logo */
-    color: white;
-    padding: 1em 2em;
-  }
-  
-  .header-content {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-  
-  .logo {
-    width: 70px;
-    height: auto;
-  }
-  
-  .header-text h1 {
-    margin: 0;
-    font-size: 2em;
-  }
-  
-  .header-text p {
-    margin: 0.3em 0 0 0;
-    font-size: 1em;
-  }
-  
+  font-family: 'Roboto Mono', monospace;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+  color: #1a1a1a;
+}
+
+header {
+  background-color: #0C2E1C;
+  color: white;
+  padding: 1em 2em;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.logo {
+  width: 80px;
+  height: auto;
+}
+
+.header-text h1 {
+  margin: 0;
+  font-size: 2em;
+}
+
+.tagline {
+  font-style: italic;
+  font-size: 1em;
+  margin: 0.3em 0;
+}
+
+.hero .banner {
+  width: 100%;
+  height: auto;
+  max-height: 396px;
+  object-fit: cover;
+  display: block;
+}
+
+main {
+  padding: 2em;
+}
+
+section {
+  margin-bottom: 2em;
+}
+
+.services ul, .contact p {
+  line-height: 1.6;
+}
+
+footer {
+  background-color: #222;
+  color: #ccc;
+  text-align: center;
+  padding: 1em;
+  font-size: 0.9em;
+}
+
+.skills {
+  padding: 2em;
+  background-color: #fff;
+  color: #222;
+}
+
+.skills h2 {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2em;
+}
+
+.skills-grid h3 {
+  color: #0C2E1C;
+  border-bottom: 2px solid #0C2E1C;
+  padding-bottom: 0.3em;
+}
+
+.skills-grid ul {
+  list-style-type: disc;
+  padding-left: 1.2em;
+  line-height: 1.5;
+}
+
