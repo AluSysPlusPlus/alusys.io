@@ -5,8 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Robotics & ROS | AluSys++</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="LOGO.png">
 </head>
+
+<canvas id="matrixCanvas"></canvas>
+<script>
+  const canvas = document.getElementById("matrixCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const letters = "01";
+  const fontSize = 16;
+  const columns = canvas.width / fontSize;
+  const drops = Array.from({ length: columns }, () => 1);
+
+  function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#00ff88";
+    ctx.font = `${fontSize}px monospace`;
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawMatrix, 33);
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+
+
+
 <body>
   <header>
     <div class="header-content">
@@ -18,27 +61,26 @@
     </div>
   </header>
 
-<nav class="navbar">
-  <ul>
-    <li><a href="index.html">Home</a></li>
-    <li><a href="c.html">C</a></li>
-    <li><a href="cpp.html">C++</a></li>
-    <li><a href="csharp.html">C#</a></li>
-    <li><a href="matlab.html">MATLAB</a></li>
-    <li><a href="ICS.html">ICS</a></li>
-    <li><a href="robotics.html">Robotics</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
-</nav>
-
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="c.html">C</a></li>
+      <li><a href="cpp.html">C++</a></li>
+      <li><a href="csharp.html">C#</a></li>
+      <li><a href="matlab.html">MATLAB</a></li>
+      <li><a href="ICS.html">ICS</a></li>
+      <li><a href="robotics.html">Robotics</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
 
   <main>
-    <section>
+    <section class="glow-box">
       <h2>🤖 Robotics, Kinematics & ROS Integration</h2>
       <p>At AluSys++, we bring together kinematic modelling, motion control, and robot software engineering to deliver advanced robotics solutions — from digital twin simulations to real-world deployment.</p>
     </section>
 
-    <section>
+    <section class="glow-box">
       <h3>📦 Platforms & Tools</h3>
       <ul>
         <li><strong>ROS / ROS2</strong> – Robot Operating System, nodes, topics, services, TF, URDF/Xacro, Rviz, Gazebo</li>
@@ -48,7 +90,7 @@
       </ul>
     </section>
 
-    <section>
+    <section class="glow-box">
       <h3>🧮 Kinematics & Robot Modelling</h3>
       <ul>
         <li>Forward & Inverse Kinematics (analytical & numerical)</li>
@@ -59,18 +101,18 @@
       </ul>
     </section>
 
-    <section>
+    <section class="glow-box">
       <h3>🔁 Path Planning & Motion Control</h3>
       <ul>
         <li>Trajectory generation (linear, polynomial, time-scaling)</li>
-        <li>Collision-free motionL</li>
+        <li>Collision-free motion planning</li>
         <li>Closed-loop feedback control for precise execution</li>
         <li>Toolpath planning for welding, painting, pick-and-place</li>
         <li>Dynamic obstacle avoidance and real-time re-planning</li>
       </ul>
     </section>
 
-    <section>
+    <section class="glow-box">
       <h3>🧠 Perception & Intelligence</h3>
       <ul>
         <li>Sensor fusion (LiDAR, vision, IMU)</li>
@@ -80,7 +122,7 @@
       </ul>
     </section>
 
-    <section>
+    <section class="glow-box">
       <h3>🧰 Industrial Deployment & Simulation</h3>
       <ul>
         <li>Digital twin simulation using RobotStudio / ROS Gazebo</li>

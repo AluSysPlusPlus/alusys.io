@@ -5,9 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>MATLAB & Simulink | AluSys++</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="LOGO.png">
+
+  <!-- Highlight.js for MATLAB/Octave syntax -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/octave.min.js"></script>
+
+  <style>
+    .animation-tabs {
+      margin: 1em 0;
+      text-align: center;
+    }
+    
+    #animationCanvasWrapper {
+      background: #111;
+      border: 1px solid #00ff88;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1em;
+    }
+  </style>
 </head>
+
 <body>
+  <canvas id="matrixCanvas"></canvas>
+  <script>
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const letters = "01";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array.from({ length: columns }, () => 1);
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#00ff88";
+      ctx.font = `${fontSize}px monospace`;
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 33);
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+
   <header>
     <div class="header-content">
       <img src="LOGO.PNG" alt="Alushi Systems Logo" class="logo" />
@@ -18,27 +70,27 @@
     </div>
   </header>
 
-<nav class="navbar">
-  <ul>
-    <li><a href="index.html">Home</a></li>
-    <li><a href="c.html">C</a></li>
-    <li><a href="cpp.html">C++</a></li>
-    <li><a href="csharp.html">C#</a></li>
-    <li><a href="matlab.html">MATLAB</a></li>
-    <li><a href="ICS.html">ICS</a></li>
-    <li><a href="robotics.html">Robotics</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
-</nav>
-
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="c.html">C</a></li>
+      <li><a href="cpp.html">C++</a></li>
+      <li><a href="csharp.html">C#</a></li>
+      <li><a href="matlab.html">MATLAB</a></li>
+      <li><a href="ICS.html">ICS</a></li>
+      <li><a href="robotics.html">Robotics</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
 
   <main>
-    <section>
+    <section class="glow-box">
       <h2>🧠 MATLAB & Simulink Engineering</h2>
       <p>We leverage MATLAB and Simulink for modelling, control design, simulation, optimisation, and algorithm development across industrial, academic, and research applications.</p>
+      <img src="Matlab.png" alt="MATLAB and Simulink visual" class="ics-image">
     </section>
 
-    <section>
+    <section class="glow-box">
       <h3>📐 System Modelling & Simulation</h3>
       <ul>
         <li>First-principles modelling based on physics and dynamics</li>
@@ -50,7 +102,12 @@
       </ul>
     </section>
 
-    <section>
+    <section class="glow-box code-editor">
+      <h3>🧮 PID Control Example in MATLAB</h3>
+      <pre><code id="pidCodeEl" class="language-octave"></code></pre>
+    </section>
+
+    <section class="glow-box">
       <h3>🌀 Classical & Modern Control Design</h3>
       <ul>
         <li>PID tuning and performance analysis</li>
@@ -64,7 +121,7 @@
       </ul>
     </section>
 
-    <section>
+    <section class="glow-box">
       <h3>📊 Analysis, Plotting & Toolboxes</h3>
       <ul>
         <li>Custom plotting for time series, frequency response, FFT, bode/nyquist plots</li>
@@ -74,7 +131,7 @@
       </ul>
     </section>
 
-    <section>
+    <section class="glow-box">
       <h3>🔍 Optimisation & Advanced Algorithms</h3>
       <ul>
         <li>Linear and nonlinear programming (LP/NLP)</li>
@@ -85,7 +142,7 @@
       </ul>
     </section>
 
-    <section>
+    <section class="glow-box">
       <h3>⚙️ Simulink Integration & Automation</h3>
       <ul>
         <li>Simulation of control systems with plants, sensors, and disturbances</li>
@@ -96,7 +153,13 @@
       </ul>
     </section>
 
-    <section>
+    <section class="glow-box" id="matlab-showcase">
+      <div id="animationCanvasWrapper">
+        <canvas id="animationCanvas" width="600" height="300"></canvas>
+      </div>
+    </section>
+
+    <section class="glow-box">
       <h3>🚀 Deployment & Industrial Integration</h3>
       <ul>
         <li>Integration of MATLAB with external systems (CSV, OPC UA, sockets, DLLs)</li>
@@ -110,5 +173,129 @@
   <footer>
     <p>&copy; 2025 Alushi Systems Limited</p>
   </footer>
+
+  <script>
+  const pidCodeEl = document.getElementById("pidCodeEl");
+  const pidCode = `%% Author: Alushi
+
+s = tf('s');
+plant = 1 / (s^2 + 2*s + 1);
+
+Kp = 1.5; Ki = 0.5; Kd = 0.1;
+C = pid(Kp, Ki, Kd);
+
+T = feedback(C*plant, 1);
+step(T);
+title('PID Controlled System');`;
+
+  let i = 0;
+  function typeCode() {
+    if (i <= pidCode.length) {
+      pidCodeEl.textContent = pidCode.slice(0, i);
+      i++;
+      setTimeout(typeCode, 15);
+    } else {
+      hljs.highlightElement(pidCodeEl);
+      setTimeout(() => {
+        pidCodeEl.textContent = "";
+        i = 0;
+        typeCode();
+      }, 3500);
+    }
+  }
+
+  window.addEventListener("load", () => {
+    hljs.highlightAll();
+    typeCode();
+  });
+
+  
+  const canvasAnim = document.getElementById('animationCanvas');
+  const ctxAnim = canvasAnim.getContext('2d');
+  let animationModes = ['plot', 'polezero', 'fft', 'nn'];
+  let animationModeIndex = 0;
+  let animationMode = animationModes[animationModeIndex];
+  let time = 0;
+
+  function drawAnimation() {
+    ctxAnim.clearRect(0, 0, canvasAnim.width, canvasAnim.height);
+
+    if (animationMode === 'plot') {
+      ctxAnim.strokeStyle = '#00ff88';
+      ctxAnim.beginPath();
+      for (let x = 0; x < canvasAnim.width; x++) {
+        const y = 150 + 40 * Math.sin((x + time) * 0.05);
+        x === 0 ? ctxAnim.moveTo(x, y) : ctxAnim.lineTo(x, y);
+      }
+      ctxAnim.stroke();
+    }
+
+    if (animationMode === 'polezero') {
+      // Plot poles (X) and zeros (O) on a complex plane
+      ctxAnim.strokeStyle = '#00ff88';
+      ctxAnim.beginPath();
+      ctxAnim.moveTo(300, 0);
+      ctxAnim.lineTo(300, 300);
+      ctxAnim.moveTo(0, 150);
+      ctxAnim.lineTo(600, 150);
+      ctxAnim.stroke();
+
+      const poles = [{x: 250, y: 150}, {x: 350, y: 150}];
+      const zeros = [{x: 300, y: 100}, {x: 300, y: 200}];
+
+      poles.forEach(p => {
+        ctxAnim.strokeStyle = '#ff4444';
+        ctxAnim.beginPath();
+        ctxAnim.moveTo(p.x - 8, p.y - 8);
+        ctxAnim.lineTo(p.x + 8, p.y + 8);
+        ctxAnim.moveTo(p.x - 8, p.y + 8);
+        ctxAnim.lineTo(p.x + 8, p.y - 8);
+        ctxAnim.stroke();
+      });
+
+      zeros.forEach(z => {
+        ctxAnim.strokeStyle = '#00ff88';
+        ctxAnim.beginPath();
+        ctxAnim.arc(z.x, z.y, 8, 0, 2 * Math.PI);
+        ctxAnim.stroke();
+      });
+    }
+
+    if (animationMode === 'fft') {
+      for (let i = 0; i < 60; i++) {
+        const height = 100 + 80 * Math.abs(Math.sin(time * 0.03 + i));
+        ctxAnim.fillStyle = '#00ff88';
+        ctxAnim.fillRect(i * 10, 300 - height, 8, height);
+      }
+    }
+
+    if (animationMode === 'nn') {
+      ctxAnim.fillStyle = '#00ff88';
+      for (let layer = 0; layer < 3; layer++) {
+        for (let node = 0; node < 5; node++) {
+          const x = 100 + layer * 200;
+          const y = 50 + node * 40 + 10 * Math.sin(time * 0.1 + node);
+          ctxAnim.beginPath();
+          ctxAnim.arc(x, y, 10, 0, 2 * Math.PI);
+          ctxAnim.fill();
+        }
+      }
+    }
+
+    time++;
+    requestAnimationFrame(drawAnimation);
+  }
+
+  function cycleAnimations() {
+    animationModeIndex = (animationModeIndex + 1) % animationModes.length;
+    animationMode = animationModes[animationModeIndex];
+  }
+
+  setInterval(cycleAnimations, 7000);
+  drawAnimation();
+</script>
+
+
+
 </body>
 </html>

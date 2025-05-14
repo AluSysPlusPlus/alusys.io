@@ -9,6 +9,40 @@
   <link rel="icon" type="image/png" href="LOGO.png">
 </head>
 <body>
+  <canvas id="matrixCanvas"></canvas>
+  <script>
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const letters = "01";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = Array.from({ length: columns }, () => 1);
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "#00ff88";
+      ctx.font = `${fontSize}px monospace`;
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(drawMatrix, 33);
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+
   <header>
     <div class="header-content">
       <img src="LOGO.PNG" alt="Alushi Systems Logo" class="logo" />
@@ -33,7 +67,7 @@
   </nav>
 
   <main>
-    <section class="contact-form">
+    <section class="contact-form glow-box">
       <h2>📬 Contact Us</h2>
       <p>If you'd like to discuss a project, request a consultation, or get in touch, please fill in the form below. This will open your email client to send the message.</p>
 
@@ -56,7 +90,7 @@
         <button type="submit">Send Email</button>
       </form>
 
-      <p style="margin-top: 20px; font-size: 14px;">📧 Note: This form will open your default email app. If nothing happens, ensure an email client (like Outlook, Mail, or Thunderbird) is installed and set as default on your device.</p>
+      <p>📧 Note: This form will open your default email app. If nothing happens, ensure an email client (like Outlook, Mail, or Thunderbird) is installed and set as default on your device.</p>
     </section>
   </main>
 

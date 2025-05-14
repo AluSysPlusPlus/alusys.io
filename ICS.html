@@ -1,23 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Industrial Control Systems | AluSys++</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="LOGO.png">
+
+  <!-- Highlight.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/pascal.min.js"></script>
+  <script>hljs.highlightAll();</script>
+
+  <style>
+    #fakeCursor {
+    position: absolute;
+    width: 50px;
+    height: 70px;
+    background: url('cursor.png') no-repeat center;
+    background-size: contain;
+    z-index: 1000;
+    pointer-events: none;
+    transition: left 1s ease, top 1s ease, transform 0.2s;
+    left: 6000px;  
+    top: 3000px;   
+  }
+    pre code {
+      display: block;
+      padding: 1em;
+      overflow-x: auto;
+      white-space: pre;
+      height: 300px;           
+      background: #1d1f21;    
+      border: 1px solid #00ff88;
+      box-sizing: border-box;
+    }
+  </style>
 </head>
+
+
 <body>
-  <header>
-    <div class="header-content">
-      <img src="LOGO.PNG" alt="Alushi Systems Logo" class="logo">
-      <div class="header-text">
-        <h1>AluSys++</h1>
-        <p class="tagline">&gt;&gt; Intelligent Inputs ++ Powerful Outputs &lt;&lt;</p>
-      </div>
+<canvas id="matrixCanvas"></canvas>
+<script>
+  const canvas = document.getElementById("matrixCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const letters = "01";
+  const fontSize = 16;
+  const columns = canvas.width / fontSize;
+  const drops = Array.from({ length: columns }, () => 1);
+
+  function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#00ff88";
+    ctx.font = `${fontSize}px monospace`;
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawMatrix, 33);
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+
+<header>
+  <div class="header-content">
+    <img src="LOGO.PNG" alt="Alushi Systems Logo" class="logo" />
+    <div class="header-text">
+      <h1>AluSys++</h1>
+      <p class="tagline">&gt;&gt; Intelligent Inputs ++ Powerful Outputs &lt;&lt;</p>
     </div>
-  </header>
+  </div>
+</header>
 
 <nav class="navbar">
   <ul>
@@ -32,56 +103,184 @@
   </ul>
 </nav>
 
+<section class="glow-box">
+  <h2>🔧 Industrial Control Systems (ICS)</h2>
+  <p>Alushi Systems specialises in designing, programming, and deploying robust industrial control systems. We offer support and solutions for software standards in real-world control challenges.</p>
+</section>
+
+<section class="glow-box">
+  <h3>🧠 PLC Programming</h3>
+  <ul>
+    <li>Siemens SIMATIC & TIA (S7-300, S7-1200, S7-1500)</li>
+    <li>Languages: <strong>SCL</strong>, <strong>FBD</strong>, <strong>LAD</strong>, <strong>GRAPH</strong></li>
+    <li>Modular design, reusable FB/FC structures, UDT-based architecture</li>
+    <li>Cycle optimisation and execution control</li>
+  </ul>
+</section>
+
+
+<main>
+  <section class="glow-box">
+    <h3> PLC Software Module Integration</h3>
+
+    <svg id="ladderDiagram" viewBox="0 0 800 200" width="100%" height="200" xmlns="http://www.w3.org/2000/svg">
+      <line x1="60" y1="40" x2="60" y2="160" stroke="#00ff88" stroke-width="3" />
+      <line x1="740" y1="40" x2="740" y2="160" stroke="#00ff88" stroke-width="3" />
+      <line x1="60" y1="80" x2="740" y2="80" stroke="#00ff88" stroke-width="3" />
+
+      <line x1="100" y1="80" x2="120" y2="80" stroke="#fff" stroke-width="3" />
+      <line x1="120" y1="70" x2="120" y2="90" stroke="#fff" stroke-width="3" />
+      <line x1="140" y1="70" x2="140" y2="90" stroke="#fff" stroke-width="3" />
+      <line x1="140" y1="80" x2="160" y2="80" stroke="#fff" stroke-width="3" />
+      <text x="115" y="65" fill="#00ff88" font-size="13">Start</text>
+
+      <line x1="200" y1="80" x2="220" y2="80" stroke="#fff" stroke-width="3" />
+      <line x1="220" y1="70" x2="220" y2="90" stroke="#fff" stroke-width="3" />
+      <line x1="240" y1="70" x2="240" y2="90" stroke="#fff" stroke-width="3" />
+      <line x1="240" y1="80" x2="260" y2="80" stroke="#fff" stroke-width="3" />
+      <line x1="220" y1="70" x2="240" y2="90" stroke="#00ff88" stroke-width="2" />
+      <text x="225" y="65" fill="#00ff88" font-size="13">Stop</text>
+
+      <rect x="300" y="60" width="120" height="40" fill="none" stroke="#00ff88" stroke-width="2" />
+      <text id="fbBlock" x="310" y="85" fill="#00ff88" font-size="13" style="cursor:pointer;">FB_START_LOGIC</text>
+
+      <path d="M685 70 Q675 80 685 90" stroke="#fff" stroke-width="3" fill="none" />
+      <path d="M715 70 Q725 80 715 90" stroke="#fff" stroke-width="3" fill="none" />
+      <text x="685" y="110" fill="#00ff88" font-size="13">Q0.0</text>
+
+      <circle r="5" fill="#00ff88" id="dot1" cx="80" cy="80" />
+      <circle r="5" fill="#111" stroke="#00ff88" stroke-width="1" id="dot2" cx="180" cy="80" />
+      <circle r="5" fill="#111" stroke="#00ff88" stroke-width="1" id="dot3" cx="280" cy="80" />
+      <circle r="5" fill="#111" stroke="#00ff88" stroke-width="1" id="dot4" cx="440" cy="80" />
+      <circle r="5" fill="#111" stroke="#00ff88" stroke-width="1" id="dot5" cx="670" cy="80" />
+    </svg>
+
+    <div id="fakeCursor"></div>
+
+    
+    <pre><code id="sclCode" class="language-pascal">// Click FB_START_LOGIC to load code...</code></pre>
+
+  </section>
+</main>
+
+
+<section class="glow-box">
+  <h2>🏭 Siemens Industrial Devices</h2>
+  <img src="Siemens.png" alt="Siemens PLCs and TIA Portal" style="max-width:100%; height:auto;">
+</section>
+
+<section class="glow-box">
+  <h3>⚙️ Industrial Devices</h3>
+  <ul>
+    <li><strong>PLCs</strong> – Real-time execution for automation and machinery</li>
+    <li><strong>VFDs</strong> – Motor control for conveyors, pumps, fans</li>
+    <li><strong>HMI & SCADA</strong> – Operator interfaces, alarms, logging (WinCC, TIA Portal)</li>
+    <li><strong>I/O Modules</strong> – Digital/analog signal integration with noise resilience</li>
+  </ul>
+</section>
+
+<section class="glow-box">
+  <h3>🔌 Communication Protocols</h3>
+  <ul>
+    <li>PROFINET, PROFIBUS, Modbus TCP/RTU, Ethernet/IP</li>
+    <li>Real-time IO, diagnostic communication</li>
+    <li>Third-party device addressing and integration</li>
+  </ul>
+</section>
+
+<section class="glow-box">
+  <h3>📐 Engineering Approaches</h3>
+  <ul>
+    <li>Model-based control and simulation with MATLAB/Simulink</li>
+    <li>Sensor calibration, signal filtering, and fault logic</li>
+    <li>Structured documentation, version control, and system testing</li>
+  </ul>
+</section>
 
 
 
-  <main>
-    <section class="ics-intro">
-      <h2>🔧 Industrial Control Systems (ICS)</h2>
-      <p>Alushi Systems specialises in designing, programming, and deploying robust industrial control systems standard software libraries. We offer support and solutions for the engineering of software standards in real-world control challenges.</p>
-    </section>
 
-    <section class="ics-content">
-      <h3>🧠 PLC Programming</h3>
-      <ul>
-        <li>Siemens SIMATIC & TIA (S7-300, S7-1200, S7-1500)</li>
-        <li>Languages: <strong>SCL (Structured Control Language)</strong>, <strong>FBD (Function Block Diagram)</strong>, <strong>LAD (Ladder Logic)</strong>, <strong>GRAPH</strong></li>
-        <li>Modular design, reusable FB/FC structures, UDT-based architecture</li>
-        <li>Cycle optimisation and execution control</li>
-      </ul>
 
-    <section class="ics-banner">
-        <h2>Siemens Industrial Control Systems</h2>
-        <img src="Siemens.png" alt="Siemens PLCs and TIA Portal" class="ics-image">
-    </section>
-      
 
-      <h3>⚙️ Industrial Devices</h3>
-      <ul>
-        <li><strong>PLCs</strong> – Central to automated control; deterministic, real-time execution for machinery and process control</li>
-        <li><strong>VFDs (Variable Frequency Drives)</strong> – For precise motor speed and torque control in conveyor systems, pumps, and fans</li>
-        <li><strong>HMI & SCADA</strong> – Integrated operator interfaces, alarms, logging, and remote access using WinCC, TIA Portal, or third-party platforms</li>
-        <li><strong>I/O Modules</strong> – Digital and analog signal conditioning with industrial-grade noise resilience</li>
-      </ul>
 
-      <h3>🔌 Communication Protocols</h3>
-      <ul>
-        <li>PROFINET, PROFIBUS, Modbus TCP/RTU, Ethernet/IP</li>
-        <li>Real-time IO and diagnostic integration</li>
-        <li>Third-party device integration and addressing</li>
-      </ul>
 
-      <h3>📐 Engineering Approaches</h3>
-      <ul>
-        <li>Model-based control and simulation in MATLAB/Simulink</li>
-        <li>Signal filtering, sensor calibration, and fault logic</li>
-        <li>Structured project documentation, version control, and system testing</li>
-      </ul>
-    </section>
-  </main>
 
-  <footer>
-    <p>&copy; 2025 Alushi Systems Limited</p>
-  </footer>
+<footer>
+  <p>&copy; 2025 Alushi Systems Limited</p>
+</footer>
+
+<script>
+  const dots = ['dot1', 'dot2', 'dot3', 'dot4', 'dot5'];
+  let current = 0;
+  function animateLadderFlow() {
+    dots.forEach((id, i) => {
+      const dot = document.getElementById(id);
+      dot.setAttribute('fill', i === current ? '#00ff88' : '#111');
+    });
+    current = (current + 1) % dots.length;
+  }
+  setInterval(animateLadderFlow, 400);
+
+  const cursor = document.getElementById('fakeCursor');
+  const fbText = document.getElementById('fbBlock');
+  const codeBlock = document.getElementById('sclCode');
+
+  function simulateClickLoop() {
+    const rect = fbText.getBoundingClientRect();
+    const x = rect.left + window.scrollX + rect.width / 2;
+    const y = rect.top + window.scrollY + rect.height / 2;
+
+    cursor.style.transition = 'left 1s ease, top 1s ease';
+    cursor.style.left = '0px';
+    cursor.style.top = '0px';
+    codeBlock.textContent = '// Click FB_START_LOGIC to load code...';
+
+    setTimeout(() => {
+      cursor.style.left = `${x}px`;
+      cursor.style.top = `${y}px`;
+    }, 500);
+
+    setTimeout(() => {
+      cursor.style.transform = 'scale(0.9)';
+      setTimeout(() => {
+        cursor.style.transform = 'scale(1)';
+        codeBlock.textContent = `
+// Author: Alushi
+FUNCTION_BLOCK FB_START_LOGIC
+VAR_INPUT
+  Start : BOOL;
+  Stop  : BOOL;
+END_VAR
+VAR_OUTPUT
+  MotorOn : BOOL;
+END_VAR
+VAR
+  StartEdge : R_TRIG;
+  StopEdge  : R_TRIG;
+END_VAR
+BEGIN
+  StartEdge(IN1 := Start, IN2 := NOT Stop);
+  StopEdge(IN1 := Stop, IN2 := NOT Start);
+
+  IF StartEdge.Q THEN
+    MotorOn := TRUE;
+  END_IF;
+
+  IF StopEdge.Q THEN
+    MotorOn := FALSE;
+  END_IF;
+END_FUNCTION_BLOCK`.trim();
+        hljs.highlightElement(codeBlock);
+      }, 300);
+    }, 1600);
+
+    setTimeout(simulateClickLoop, 10000); // Repeat every 10 seconds
+  }
+
+  window.addEventListener('DOMContentLoaded', simulateClickLoop);
+</script>
+
+
+
 </body>
-</
+</html>

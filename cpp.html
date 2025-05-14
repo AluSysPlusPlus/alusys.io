@@ -8,6 +8,49 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="LOGO.png">
 </head>
+
+<canvas id="matrixCanvas"></canvas>
+<script>
+  const canvas = document.getElementById("matrixCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const letters = "01";
+  const fontSize = 16;
+  const columns = canvas.width / fontSize;
+  const drops = Array.from({ length: columns }, () => 1);
+
+  function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#00ff88";
+    ctx.font = `${fontSize}px monospace`;
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawMatrix, 33);
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+
+
+
+
 <body>
   <header>
     <div class="header-content">
@@ -19,28 +62,26 @@
     </div>
   </header>
 
-<nav class="navbar">
-  <ul>
-    <li><a href="index.html">Home</a></li>
-    <li><a href="c.html">C</a></li>
-    <li><a href="cpp.html">C++</a></li>
-    <li><a href="csharp.html">C#</a></li>
-    <li><a href="matlab.html">MATLAB</a></li>
-    <li><a href="ICS.html">ICS</a></li>
-    <li><a href="robotics.html">Robotics</a></li>
-    <li><a href="contact.html">Contact</a></li>
-  </ul>
-</nav>
-
-
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="c.html">C</a></li>
+      <li><a href="cpp.html">C++</a></li>
+      <li><a href="csharp.html">C#</a></li>
+      <li><a href="matlab.html">MATLAB</a></li>
+      <li><a href="ICS.html">ICS</a></li>
+      <li><a href="robotics.html">Robotics</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
 
   <main>
-    <section class="cpp-intro">
+    <section class="glow-box">
       <h2>💻 C++ Programming</h2>
       <p>C++ is at the core of performance-critical software — from embedded systems and real-time control to GUIs and algorithmic engines. At AluSys++, we deliver tailored C++ solutions engineered with precision and scalability in mind.</p>
     </section>
 
-    <section class="cpp-content">
+    <section class="glow-box">
       <h3>🔩 What We Offer</h3>
       <ul>
         <li>Performance-optimized algorithms and logic design</li>
@@ -52,7 +93,9 @@
         <li>XML / JSON configuration systems</li>
         <li>Socket programming and TCP/IP communication</li>
       </ul>
+    </section>
 
+    <section class="glow-box">
       <h3>🛠 Tools & Frameworks</h3>
       <ul>
         <li>Code::Blocks, Visual Studio, Qt Creator</li>
@@ -61,17 +104,18 @@
         <li>WinSock / Boost.Asio for networking</li>
         <li>OpenCV, Eigen, and math libraries</li>
       </ul>
+    </section>
 
+    <section class="glow-box">
       <h3>🎯 Real-World Applications</h3>
-        <ul>
+      <ul>
         <li>Industrial automation and control systems</li>
         <li>Embedded and real-time systems programming</li>
         <li>Custom software for hardware integration</li>
         <li>Engineering tools and automation utilities</li>
         <li>Signal processing and data acquisition solutions</li>
         <li>Simulation and modelling software</li>
-</ul>
-
+      </ul>
     </section>
   </main>
 
