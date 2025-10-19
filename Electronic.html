@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electronics & PCB Design Services | AluSys++</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="LOGO.png" />
+</head>
+
+<body>
+  <!-- Matrix backdrop (keep or remove as you like) -->
+  <canvas id="matrixCanvas"></canvas>
+  <script>
+    const canvas = document.getElementById("matrixCanvas");
+    const ctx = canvas.getContext("2d");
+    function size(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+    size();
+    const letters="01", fontSize=16;
+    let cols=Math.floor(canvas.width/fontSize);
+    let drops=Array.from({length:cols},()=>1);
+    function draw(){
+      ctx.fillStyle="rgba(0,0,0,0.05)";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle="#00ff88";
+      ctx.font=`${fontSize}px monospace`;
+      for(let i=0;i<drops.length;i++){
+        const ch=letters[Math.floor(Math.random()*letters.length)];
+        ctx.fillText(ch,i*fontSize,drops[i]*fontSize);
+        if(drops[i]*fontSize>canvas.height && Math.random()>0.98) drops[i]=0;
+        drops[i]++;
+      }
+    }
+    setInterval(draw,40);
+    addEventListener("resize",()=>{ size(); cols=Math.floor(canvas.width/fontSize); drops=Array.from({length:cols},()=>1); });
+  </script>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <img src="LOGO.PNG" alt="Alushi Systems Logo" class="logo" />
+      <div class="header-text">
+        <h1>AluSys++</h1>
+        <p class="tagline">&gt;&gt; Electronics & PCB Design Services &lt;&lt;</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a class="active" href="Electronic.html">Electronics</a></li>
+      <li><a href="c.html">C</a></li>
+      <li><a href="cpp.html">C++</a></li>
+      <li><a href="csharp.html">C#</a></li>
+      <li><a href="matlab.html">MATLAB</a></li>
+      <li><a href="ICS.html">ICS</a></li>
+      <li><a href="robotics.html">Robotics</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main -->
+  <main>
+    <!-- Hero / Value -->
+    <section class="panel">
+      <h2>Electronics Development, PCB Design & Simulation</h2>
+      <p>Practical, engineering-led support from requirements through manufacturing files. We design schematics, lay out multilayer PCBs, simulate critical circuits, and prepare reliable documentation for fabrication and assembly.</p>
+      <p><a class="cta" href="contact.html">Discuss your requirements →</a></p>
+    </section>
+
+    <!-- Services -->
+    <section class="panel two-col">
+      <div>
+        <h3>Services</h3>
+        <ul>
+          <li>Schematic capture & architecture planning</li>
+          <li>PCB layout (2–8+ layers, impedance control)</li>
+          <li>Analog, mixed-signal & power electronics</li>
+          <li>Simulation: SPICE (AC/transient/Monte-Carlo)</li>
+          <li>Design for manufacturing & assembly (DFM/DFA)</li>
+          <li>Documentation for fabrication & assembly</li>
+          <li>Prototype bring-up and basic validation</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Toolchain</h3>
+        <ul>
+          <li>Altium Designer, KiCad</li>
+          <li>LTspice / PSpice, Proteus</li>
+          <li>Microcontrollers for bring-up (e.g., STM32, ESP32, AVR, PIC)</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Deliverables -->
+    <section class="panel two-col">
+      <div>
+        <h3>Typical Deliverables</h3>
+        <ul>
+          <li>Source design files & PDFs</li>
+          <li>Fabrication data (Gerber/ODB++/IPC-2581)</li>
+          <li>Assembly data (Pick-and-Place, BOM, paste layers)</li>
+          <li>Readme/notes for fabrication & assembly</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Engagement Options</h3>
+        <ul>
+          <li>Fixed-scope packages</li>
+          <li>Time & materials</li>
+          <li>Consultation / reviews</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Process -->
+    <section class="panel">
+      <h3>Process</h3>
+      <ol class="process">
+        <li><strong>Discovery:</strong> Requirements, constraints, compliance targets.</li>
+        <li><strong>Design:</strong> Schematics, part selection, initial simulations.</li>
+        <li><strong>Layout:</strong> Stack-up, constraints, routing, DRC/ERC reviews.</li>
+        <li><strong>Output:</strong> Fabrication & assembly files, documentation.</li>
+        <li><strong>Support:</strong> Prototype bring-up and adjustments as needed.</li>
+      </ol>
+    </section>
+
+    <!-- CTA -->
+    <section class="panel">
+      <h3>Start a Project</h3>
+      <p>Share your requirements, preferred tools, and any schedules or standards you need to meet. We’ll respond with a practical plan and scope.</p>
+      <p><a class="cta" href="contact.html">Get in touch →</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Alushi Systems Limited</p>
+  </footer>
+
+  <!-- Small, neutral styles -->
+  <style>
+    .panel { background: rgba(20,20,20,0.7); padding: 1.2rem; border-radius: 10px; margin: 1rem 0; }
+    .two-col { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .process { display: grid; gap: .4rem; padding-left: 1rem; }
+    .navbar .active { border-bottom: 2px solid #00ff88; }
+    .cta { display:inline-block; margin-top:.6rem; padding:.55rem 1rem; border:1px solid #00ff88; border-radius:8px; text-decoration:none; }
+  </style>
+</body>
+</html>
