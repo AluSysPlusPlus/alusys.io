@@ -521,7 +521,7 @@ function drawAtom() {
 
   if (superposition) {
     superTime += 0.02;
-    for (let i = 0; i < 1500; i++) {
+    for (let i = 0; i < 15500; i++) {
       const angle = Math.random() * Math.PI * 2;
       const radius = 200 + Math.sin(superTime + i) * 80;
       const x = cx + Math.cos(angle) * radius;
@@ -738,22 +738,26 @@ function renderQuiz() {
 
   if (finished) {
     quizEls.options.innerHTML = "";
-    quizEls.question.textContent = "Great work! Your results:";
+    quizEls.question.textContent = "Your results:";
     quizEls.result.classList.remove("hidden");
     quizEls.result.innerHTML = `
       <div><strong>Score:</strong> ${score}/${quizData.length}</div>
       <div style="margin-top:6px;font-size:0.95em;color:#9ef">
         ${score === quizData.length
-          ? "Perfect! You’re ready to build quantum kit 🚀"
+          ? "Well done! You managed to pass a quantum quiz 🚀"
           : score >= Math.ceil(quizData.length * 0.7)
-          ? "Solid! You’ve got the right instincts ⚙️"
-          : "Nice start! Explore the popups and try again 🔁"}
+          ? "Almost! But you need to do better ⚙️"
+          : "You either didn't read the material, or you aren't quite cut out for it 🔁"}
       </div>`;
     quizEls.restart.classList.remove("hidden");
     quizEls.prev.disabled = true;
     quizEls.next.disabled = true;
     return;
   }
+
+  // ✅ Ensure navigation buttons are active again after restart
+  quizEls.prev.disabled = (i === 0);
+  quizEls.next.disabled = false;
 
   // Normal question
   const item = quizData[i];
@@ -771,9 +775,10 @@ function renderQuiz() {
     quizEls.options.appendChild(btn);
   });
 
-  quizEls.prev.disabled = (i === 0);
   quizEls.next.textContent = (i === quizData.length - 1) ? "Finish ✓" : "Next →";
 }
+
+
 
 quizEls.prev.onclick = () => {
   if (quizState.i > 0) {
