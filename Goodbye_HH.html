@@ -2,38 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
-/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Alushi's Quantum Lab</title>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    /* Updated via JS for iOS 100vh bug */
-    --vh: 100vh;
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-right: env(safe-area-inset-right, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-    --safe-left: env(safe-area-inset-left, 0px);
-  }
-
   html, body {
     margin: 0;
-    height: calc(var(--vh) * 100);
+    height: 100%;
     background: black;
     overflow: hidden;
     font-family: monospace;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    user-select: none;
-    touch-action: manipulation;
   }
 
-  /* Canvases fill screen with fixed positioning (prevents Safari bar shifts) */
   canvas {
-    position: fixed;
+    position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
@@ -43,13 +24,13 @@
   #matrix { z-index: 0; }
   #atom { z-index: 1; pointer-events: none; }
 
-  /* Title: fixed, left column, responsive width & font */
+  /* Title block on left 25% */
   #title {
-    position: fixed;
-    top: calc(20px + var(--safe-top));
-    left: calc(30px + var(--safe-left));
-    width: min(26ch, 25vw);
-    font-size: clamp(1rem, 1.2vw + 1rem, 1.6rem);
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    width: 25%;
+    font-size: 1.6em;
     font-family: 'Orbitron', monospace;
     color: #00ffff;
     letter-spacing: 2px;
@@ -66,30 +47,48 @@
   }
   @keyframes titlePulse {
     0%, 100% { text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00b3ff; }
-    50% { text-shadow: 0 0 15px #00ffff, 0 0 30px #00ccff, 0 0 60px #0088ff; }
+    50%      { text-shadow: 0 0 15px #00ffff, 0 0 30px #00ccff, 0 0 60px #0088ff; }
   }
 
-  /* Top & Bottom control bars */
-  #topControls, #bottomControls {
-    position: fixed;
+  /* Floating hint under the title */
+  #learnChange {
+    position: absolute;
+    top: 15px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 14;
+    color: #ff8080;
+    font-size: 1.5em;
+    text-shadow: 0 0 10px #ff4040;
+    letter-spacing: 1px;
+    z-index: 10;
+    animation: glowPulseRed 2s infinite ease-in-out;
+  }
+  @keyframes glowPulseRed {
+    0%, 100% { opacity: 0.6; text-shadow: 0 0 6px #ff4040; }
+    50%      { opacity: 1;   text-shadow: 0 0 18px #ff8080; }
+  }
+
+  /* Controls */
+  #topControls, #bottomControls {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: clamp(6px, 1vw, 10px);
-    max-width: 92%;
+    gap: 10px;
+    max-width: 90%;
   }
-  #topControls    { top:    calc(60px + var(--safe-top)); }
-  #bottomControls { bottom: calc(30px + var(--safe-bottom)); }
+  #topControls { top: 60px; }
+  #bottomControls { bottom: 30px; }
 
   button {
     background: rgba(0, 255, 180, 0.1);
     border: 1px solid #0ff;
     color: #0ff;
-    font-size: clamp(0.85rem, 1vw + 0.6rem, 1rem);
-    padding: clamp(6px, 0.8vw, 8px) clamp(10px, 1.2vw, 16px);
+    font-size: 1em;
+    padding: 8px 16px;
     border-radius: 5px;
     cursor: pointer;
     text-shadow: 0 0 6px #0ff;
@@ -101,11 +100,29 @@
     transform: scale(1.05);
   }
 
-  /* Side info boxes */
+  /* “Have a go” prompt */
+  #tryIt {
+    position: absolute;
+    bottom: 85px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #0ff;
+    font-size: 1.5em;
+    text-shadow: 0 0 10px #0ff;
+    letter-spacing: 1px;
+    z-index: 10;
+    animation: glowPulse 2s infinite ease-in-out;
+  }
+  @keyframes glowPulse {
+    0%, 100% { opacity: 0.6; text-shadow: 0 0 6px #0ff; }
+    50%      { opacity: 1;   text-shadow: 0 0 18px #00ffff; }
+  }
+
+  /* Info boxes (right side) */
   #infoContainer {
-    position: fixed;
-    right: calc(20px + var(--safe-right));
-    top:   calc(140px + var(--safe-top));
+    position: absolute;
+    right: 20px;
+    top: 140px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -113,7 +130,7 @@
     z-index: 15;
   }
   .info-box {
-    width: clamp(240px, 26vw, 300px);
+    width: 300px;
     background: rgba(0, 30, 60, 0.9);
     border: 1px solid #0ff;
     border-radius: 10px;
@@ -130,8 +147,9 @@
 
   /* Popup center */
   #popupContainer {
-    position: fixed;
-    top: 50%; left: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
     z-index: 20;
     display: flex;
@@ -144,69 +162,46 @@
     border: 1px solid #0ff;
     border-radius: 15px;
     padding: 25px 35px;
-    width: 420px; max-width: 90%;
-    color: #0ff; font-size: 1em;
+    width: 420px;
+    max-width: 90%;
+    color: #0ff;
+    font-size: 1em;
     box-shadow: 0 0 25px #0ff8;
-    opacity: 0; transform: scale(0.9);
+    opacity: 0;
+    transform: scale(0.9);
     transition: all 0.5s ease;
     text-align: center;
   }
   .popup.active { opacity: 1; transform: scale(1); }
   .popup h2 {
-    color: #00eaff; margin: 0 0 10px;
-    font-size: 1.3em; text-shadow: 0 0 10px #0ff;
+    color: #00eaff;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.3em;
+    text-shadow: 0 0 10px #0ff;
   }
   .popup p { color: #aaf; }
   .close-btn {
     margin-top: 15px;
     background: none;
     border: 1px solid #0ff;
-    color: #0ff; padding: 5px 15px;
-    border-radius: 5px; cursor: pointer; font-size: 0.9em;
+    color: #0ff;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
   }
   .close-btn:hover { background: rgba(0,255,255,0.2); }
 
-  /* Learn/change hint (top center) */
-  #learnChange {
-    position: fixed;
-    top: calc(8px + var(--safe-top));
-    left: 50%; transform: translateX(-50%);
-    color: #ff8080;
-    font-size: clamp(1rem, 1.2vw + 0.6rem, 1.5rem);
-    text-shadow: 0 0 10px #ff4040;
-    letter-spacing: 1px;
-    z-index: 12;
-    animation: glowPulseRed 2s infinite ease-in-out;
-  }
-  @keyframes glowPulseRed {
-    0%, 100% { opacity: 0.6; text-shadow: 0 0 6px #ff4040; }
-    50% { opacity: 1; text-shadow: 0 0 18px #ff8080; }
-  }
-
-  /* Have a go (above bottom controls) */
-  #tryIt {
-    position: fixed;
-    bottom: calc(85px + var(--safe-bottom));
-    left: 50%; transform: translateX(-50%);
-    color: #0ff;
-    font-size: clamp(1rem, 1.2vw + 0.6rem, 1.5rem);
-    text-shadow: 0 0 10px #0ff;
-    letter-spacing: 1px;
-    z-index: 13;
-    animation: glowPulse 2s infinite ease-in-out;
-  }
-  @keyframes glowPulse {
-    0%, 100% { opacity: 0.6; text-shadow: 0 0 6px #00ffff; }
-    50% { opacity: 1; text-shadow: 0 0 18px #00ffff; }
-  }
-
   /* LinkedIn badge (bottom-right) */
   #linkedinContainer {
-    position: fixed;
-    bottom: calc(20px + var(--safe-bottom));
-    right:  calc(25px + var(--safe-right));
+    position: absolute;
+    bottom: 20px;
+    right: 25px;
     z-index: 50;
-    display: flex; align-items: center; gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     background: rgba(0, 255, 255, 0.04);
     border: 1px solid rgba(0, 255, 255, 0.3);
     border-radius: 30px;
@@ -221,18 +216,25 @@
     transform: scale(1.03);
   }
   #linkedinLink {
-    display: flex; align-items: center; justify-content: center;
-    width: 42px; height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
     background: rgba(0, 255, 255, 0.08);
-    border: 1px solid #0ff; border-radius: 50%;
-    transition: all 0.3s ease; flex-shrink: 0;
+    border: 1px solid #0ff;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
   }
   #linkedinLink:hover {
     background: rgba(0, 255, 255, 0.3);
-    box-shadow: 0 0 25px #00ffff; transform: scale(1.1);
+    box-shadow: 0 0 25px #00ffff;
+    transform: scale(1.1);
   }
   #linkedinLink img {
-    width: 22px; height: 22px;
+    width: 22px;
+    height: 22px;
     filter: invert(100%) sepia(100%) saturate(1000%) hue-rotate(180deg);
     transition: all 0.3s ease;
   }
@@ -250,62 +252,112 @@
 
   /* Quiz widget (bottom-left) */
   #quizWidget {
-    position: fixed;
-    bottom: calc(20px + var(--safe-bottom));
-    left:   calc(20px + var(--safe-left));
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
     z-index: 60;
-    width: clamp(260px, 40vw, 340px);
+    width: 340px;
     max-width: calc(100vw - 40px);
     background: rgba(0, 25, 45, 0.85);
     border: 1px solid #00ffff80;
     border-radius: 14px;
     box-shadow: 0 0 25px #00ffff40;
-    color: #aef; font-family: monospace;
+    color: #aef;
+    font-family: monospace;
     backdrop-filter: blur(6px);
     overflow: hidden;
     transition: transform 0.35s ease, opacity 0.35s ease, height 0.35s ease;
   }
+  #quizBody {
+    max-height: 400px;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.4s ease;
+    opacity: 1;
+    padding: 12px;
+  }
+  .quiz-collapsed #quizBody {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
+    padding: 0 12px;
+  }
+  .quiz-collapsed { opacity: 0.8; }
+
   #quizHeader {
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background: rgba(0, 255, 255, 0.08);
     padding: 10px 12px;
     border-bottom: 1px solid #00ffff40;
-    color: #0ff; text-shadow: 0 0 8px #0ff;
+    color: #0ff;
+    text-shadow: 0 0 8px #0ff;
   }
   #quizToggle {
-    background: transparent; border: 1px solid #0ff; color: #0ff;
-    padding: 2px 8px; border-radius: 8px; cursor: pointer;
+    background: transparent;
+    border: 1px solid #0ff;
+    color: #0ff;
+    padding: 2px 8px;
+    border-radius: 8px;
+    cursor: pointer;
   }
-  #quizBody { padding: 12px; max-height: 400px; overflow: hidden; transition: max-height 0.4s ease, opacity 0.4s ease; opacity: 1; }
-  .quiz-collapsed #quizBody { max-height: 0; opacity: 0; pointer-events: none; }
-  .quiz-collapsed { opacity: 0.8; }
-
-  #quizProgress { font-size: 0.9em; color: #7ff; margin-bottom: 8px; text-shadow: 0 0 6px #00ffff80; }
-  #quizQuestion { font-size: 1.05em; color: #cff; margin-bottom: 10px; }
-  #quizOptions { display: grid; gap: 8px; margin-bottom: 12px; }
+  #quizProgress {
+    font-size: 0.9em;
+    color: #7ff;
+    margin-bottom: 8px;
+    text-shadow: 0 0 6px #00ffff80;
+  }
+  #quizQuestion {
+    font-size: 1.05em;
+    color: #cff;
+    margin-bottom: 10px;
+  }
+  #quizOptions {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
   .quizOption {
     background: rgba(0, 255, 255, 0.06);
     border: 1px solid #0ff3;
-    color: #aef; padding: 8px 10px; border-radius: 10px;
-    cursor: pointer; text-align: left;
+    color: #aef;
+    padding: 8px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
     transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s;
   }
   .quizOption:hover { transform: translateY(-1px); box-shadow: 0 0 12px #00ffff40; }
   .quizOption.selected { border-color: #0ff; background: rgba(0, 255, 255, 0.16); }
-  #quizFooter { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; }
-  #quizFooter button, #quizRestart {
-    background: rgba(0, 255, 255, 0.1); border: 1px solid #0ff; color: #0ff;
-    padding: 6px 10px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
+
+  #quizFooter {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  #quizFooter button,
+  #quizRestart {
+    background: rgba(0, 255, 255, 0.1);
+    border: 1px solid #0ff;
+    color: #0ff;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
   #quizFooter button:disabled { opacity: 0.4; cursor: default; }
   #quizFooter button:hover:not(:disabled), #quizRestart:hover { box-shadow: 0 0 14px #00ffff60; }
-  #quizResult { margin-top: 10px; background: rgba(0, 255, 160, 0.08); border: 1px solid #09f3; padding: 10px; border-radius: 10px; color: #aef; }
-  .hidden { display: none; }
 
-  /* Small screens: optionally hide right info boxes to free space */
-  @media (max-width: 600px){
-    #infoContainer{ display:none; }
+  #quizResult {
+    margin-top: 10px;
+    background: rgba(0, 255, 160, 0.08);
+    border: 1px solid #09f3;
+    padding: 10px;
+    border-radius: 10px;
+    color: #aef;
   }
+  .hidden { display: none; }
 </style>
 </head>
 <body>
@@ -315,7 +367,7 @@
   <canvas id="matrix"></canvas>
   <canvas id="atom"></canvas>
 
-  <!-- Top controls -->
+  <!-- TOP CONTROLS -->
   <div id="topControls">
     <button id="btnGoodbye">👋 Goodbye from Alushi</button>
     <button id="btnWhere">🚀 Where Alushi is Going</button>
@@ -324,9 +376,10 @@
     <button id="btnToolbox">🧰 Alushi’s Toolbox</button>
   </div>
 
+  <!-- TRY IT PROMPT -->
   <div id="tryIt">💫 Have a go for yourself ↓</div>
 
-  <!-- Bottom controls -->
+  <!-- BOTTOM CONTROLS -->
   <div id="bottomControls">
     <button id="btnLaser">🔦 Fire Lasers</button>
     <button id="btnSplit">⚛️ Split Atom</button>
@@ -335,7 +388,7 @@
     <button id="btnReset">🔄 Reset</button>
   </div>
 
-  <!-- Side info boxes -->
+  <!-- INFO BOXES -->
   <div id="infoContainer">
     <div id="infoLaser" class="info-box"><div class="info-title">Laser Cooling</div><div>Lasers slow atoms to near absolute zero, creating ultra-stable atomic states for precise quantum measurements.</div></div>
     <div id="infoSplit" class="info-box"><div class="info-title">Atom Splitting</div><div>The atom’s wavefunction splits into two light-driven paths. This forms the core of quantum interferometry.</div></div>
@@ -343,13 +396,13 @@
     <div id="infoInterfere" class="info-box"><div class="info-title">Interference Pattern</div><div>When superposed states recombine, interference fringes reveal gravity, acceleration, or magnetic effects with astonishing sensitivity.</div></div>
   </div>
 
-  <!-- Popup -->
+  <!-- POPUPS -->
   <div id="popupContainer"></div>
 
-  <!-- Ambient loop (user-gesture gated) -->
+  <!-- AUDIO LOOP (user-gesture to start) -->
   <audio id="quantumLoop" src="quantum_mechanics.mp3" loop preload="auto"></audio>
 
-  <!-- LinkedIn badge -->
+  <!-- LINKEDIN BADGE -->
   <div id="linkedinContainer">
     <a id="linkedinLink" href="https://www.linkedin.com/in/luca-alushi" target="_blank" title="Connect on LinkedIn">
       <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn">
@@ -376,448 +429,413 @@
     </div>
   </div>
 
-<script>
-/* ===== iOS viewport + DPR canvas helpers ===== */
-function setViewportVars() {
-  // Fix iOS 100vh bug by using innerHeight
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-}
-function sizeCanvasToDisplaySize(canvas, ctx){
-  const cssWidth  = canvas.clientWidth;
-  const cssHeight = canvas.clientHeight;
-  const dpr = Math.max(1, window.devicePixelRatio || 1);
-  const wantedW = Math.round(cssWidth * dpr);
-  const wantedH = Math.round(cssHeight * dpr);
-  if (canvas.width !== wantedW || canvas.height !== wantedH){
-    canvas.width = wantedW;
-    canvas.height = wantedH;
-    // Scale drawing ops so we can keep using CSS pixel coords
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  <!-- MAIN SCRIPT: Matrix, Atom, Buttons, Popups, Audio -->
+  <script>
+  // === MATRIX ===
+  const matrix = document.getElementById("matrix");
+  const mctx = matrix.getContext("2d");
+  let fontSize = 14, cols, drops, streams;
+  function initMatrix() {
+    matrix.width = window.innerWidth;
+    matrix.height = window.innerHeight;
+    cols = Math.floor(matrix.width / fontSize);
+    drops = Array(cols).fill(0);
+    streams = Array(cols).fill().map(() => (Math.random() < 0.5 ? "0" : "1"));
   }
-}
-function resizeAll() {
-  setViewportVars();
-  sizeCanvasToDisplaySize(matrix, mctx);
-  sizeCanvasToDisplaySize(atom, actx);
-}
-window.addEventListener('resize', resizeAll, { passive: true });
-window.addEventListener('orientationchange', resizeAll);
-document.addEventListener('DOMContentLoaded', resizeAll);
-
-/* Prevent iOS double-tap zoom on buttons */
-document.addEventListener('touchend', (e) => {
-  const now = Date.now();
-  if (document.lastTouch && (now - document.lastTouch) < 350) {
-    e.preventDefault();
+  function drawMatrix() {
+    mctx.fillStyle = "rgba(0,0,0,0.15)";
+    mctx.fillRect(0, 0, matrix.width, matrix.height);
+    mctx.font = fontSize + "px monospace";
+    for (let i = 0; i < cols; i++) {
+      if (Math.random() > 0.9) continue;
+      const text = streams[i];
+      const opacity = 0.1 + Math.random() * 0.25;
+      mctx.fillStyle = `rgba(0,255,120,${opacity})`;
+      mctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if (Math.random() > 0.996) streams[i] = (streams[i] === "0") ? "1" : "0";
+      if (drops[i] * fontSize > matrix.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i] += 0.15;
+    }
+    requestAnimationFrame(drawMatrix);
   }
-  document.lastTouch = now;
-}, { passive: false });
-</script>
-
-<script>
-/* ===== MATRIX ===== */
-const matrix = document.getElementById("matrix");
-const mctx = matrix.getContext("2d");
-
-let fontSize = 14, cols, drops, streams;
-
-function initMatrix() {
-  // Dimensions handled by resizeAll(); just recompute columns/drops by CSS size
-  const cssWidth  = matrix.clientWidth;
-  cols = Math.floor(cssWidth / fontSize);
-  drops = Array(cols).fill(0);
-  streams = Array(cols).fill().map(() => (Math.random() < 0.5 ? "0" : "1"));
-}
-
-function drawMatrix() {
-  mctx.fillStyle = "rgba(0,0,0,0.15)";
-  mctx.fillRect(0, 0, matrix.clientWidth, matrix.clientHeight);
-  mctx.font = fontSize + "px monospace";
-  for (let i = 0; i < cols; i++) {
-    if (Math.random() > 0.9) continue;
-    const text = streams[i];
-    const opacity = 0.1 + Math.random() * 0.25;
-    mctx.fillStyle = `rgba(0,255,120,${opacity})`;
-    mctx.fillText(text, i * fontSize, drops[i] * fontSize);
-    if (Math.random() > 0.996) streams[i] = (streams[i] === "0") ? "1" : "0";
-    if (drops[i] * fontSize > matrix.clientHeight && Math.random() > 0.975) drops[i] = 0;
-    drops[i] += 0.15;
-  }
+  initMatrix();
   requestAnimationFrame(drawMatrix);
-}
-initMatrix();
-requestAnimationFrame(drawMatrix);
 
-/* ===== ATOM VISUAL ===== */
-const atom = document.getElementById("atom");
-const actx = atom.getContext("2d", { alpha: true });
+  // === ELEMENT HOOKS (explicit, robust) ===
+  const btnGoodbye   = document.getElementById("btnGoodbye");
+  const btnWhere     = document.getElementById("btnWhere");
+  const btnQuantum   = document.getElementById("btnQuantum");
+  const btnInterf    = document.getElementById("btnInterf");
+  const btnToolbox   = document.getElementById("btnToolbox");
 
-let t = 0, laserBoost = 1.0, splitDist = 0, showInterference = false, superposition = false, superTime = 0;
+  const btnLaser     = document.getElementById("btnLaser");
+  const btnSplit     = document.getElementById("btnSplit");
+  const btnSuper     = document.getElementById("btnSuper");
+  const btnInterfere = document.getElementById("btnInterfere");
+  const btnReset     = document.getElementById("btnReset");
 
-function drawAtom() {
-  actx.clearRect(0, 0, atom.clientWidth, atom.clientHeight);
-  const cx = atom.clientWidth / 2, cy = atom.clientHeight / 2;
-  actx.globalCompositeOperation = "lighter";
+  const infoLaser     = document.getElementById("infoLaser");
+  const infoSplit     = document.getElementById("infoSplit");
+  const infoSuper     = document.getElementById("infoSuper");
+  const infoInterfere = document.getElementById("infoInterfere");
 
-  const nucleusGradient = actx.createRadialGradient(cx, cy, 0, cx, cy, 180);
-  nucleusGradient.addColorStop(0, "rgba(255,100,100,0.9)");
-  nucleusGradient.addColorStop(0.3, "rgba(255,150,255,0.4)");
-  nucleusGradient.addColorStop(1, "rgba(0,0,0,0)");
-  actx.fillStyle = nucleusGradient;
-  actx.beginPath(); actx.arc(cx, cy, 200, 0, Math.PI * 2); actx.fill();
+  // === ATOM VISUAL ===
+  const atom = document.getElementById("atom");
+  const actx = atom.getContext("2d", { alpha: true });
+  atom.width = window.innerWidth;
+  atom.height = window.innerHeight;
+  let t = 0, laserBoost = 1.0, splitDist = 0, showInterference = false, superposition = false, superTime = 0;
 
-  for (let i = 1; i <= 5; i++) {
-    const r = i * 60;
-    const alpha = 0.15 + 0.05 * Math.sin(t * 0.02 + i);
-    actx.strokeStyle = `rgba(80,180,255,${alpha})`;
-    actx.beginPath(); actx.arc(cx, cy, r, 0, Math.PI * 2); actx.stroke();
-  }
+  function drawAtom() {
+    actx.clearRect(0, 0, atom.width, atom.height);
+    const cx = atom.width / 2, cy = atom.height / 2;
+    actx.globalCompositeOperation = "lighter";
+    const nucleusGradient = actx.createRadialGradient(cx, cy, 0, cx, cy, 180);
+    nucleusGradient.addColorStop(0, "rgba(255,100,100,0.9)");
+    nucleusGradient.addColorStop(0.3, "rgba(255,150,255,0.4)");
+    nucleusGradient.addColorStop(1, "rgba(0,0,0,0)");
+    actx.fillStyle = nucleusGradient;
+    actx.beginPath(); actx.arc(cx, cy, 200, 0, Math.PI * 2); actx.fill();
 
-  if (laserBoost > 1.0) {
-    for (let i = 0; i < 3; i++) {
-      const angle = i * (Math.PI / 3);
-      const pulse = (0.5 + 0.5 * Math.sin(t * 0.05 + i * 2)) * laserBoost;
-      const beamWidth = 6 + 3 * pulse;
-      const grad = actx.createLinearGradient(
-        cx - 2000 * Math.cos(angle), cy - 2000 * Math.sin(angle),
-        cx + 2000 * Math.cos(angle), cy + 2000 * Math.sin(angle)
-      );
-      grad.addColorStop(0, "rgba(0,0,0,0)");
-      grad.addColorStop(0.5, `rgba(120,220,255,${0.8 * pulse})`);
-      grad.addColorStop(1, "rgba(0,0,0,0)");
-      actx.fillStyle = grad;
-      actx.save(); actx.translate(cx, cy); actx.rotate(angle);
-      actx.fillRect(-2000, -beamWidth / 2, 4000, beamWidth);
-      actx.restore();
+    for (let i = 1; i <= 5; i++) {
+      const r = i * 60;
+      const alpha = 0.15 + 0.05 * Math.sin(t * 0.02 + i);
+      actx.strokeStyle = `rgba(80,180,255,${alpha})`;
+      actx.beginPath(); actx.arc(cx, cy, r, 0, Math.PI * 2); actx.stroke();
     }
-  }
 
-  if (splitDist > 0) {
-    const dist = Math.sin(t * 0.01) * 200 * splitDist;
-    for (let dir of [-1, 1]) {
-      const offset = dir * dist;
-      const grad = actx.createRadialGradient(cx + offset, cy, 0, cx + offset, cy, 100);
-      grad.addColorStop(0, "rgba(100,220,255,0.4)");
-      grad.addColorStop(1, "rgba(0,0,0,0)");
-      actx.fillStyle = grad;
-      actx.beginPath();
-      actx.arc(cx + offset, cy, 100, 0, Math.PI * 2);
-      actx.fill();
+    if (laserBoost > 1.0) {
+      for (let i = 0; i < 3; i++) {
+        const angle = i * (Math.PI / 3);
+        const pulse = (0.5 + 0.5 * Math.sin(t * 0.05 + i * 2)) * laserBoost;
+        const beamWidth = 6 + 3 * pulse;
+        const grad = actx.createLinearGradient(
+          cx - 2000 * Math.cos(angle), cy - 2000 * Math.sin(angle),
+          cx + 2000 * Math.cos(angle), cy + 2000 * Math.sin(angle)
+        );
+        grad.addColorStop(0, "rgba(0,0,0,0)");
+        grad.addColorStop(0.5, `rgba(120,220,255,${0.8 * pulse})`);
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        actx.fillStyle = grad;
+        actx.save(); actx.translate(cx, cy); actx.rotate(angle);
+        actx.fillRect(-2000, -beamWidth / 2, 4000, beamWidth);
+        actx.restore();
+      }
     }
-  }
 
-  if (showInterference) {
-    for (let i = -80; i <= 80; i++) {
-      const offset = i * 3;
-      const intensity = 0.7 + 0.3 * Math.cos(i * 0.2 + t * 0.1);
-      actx.strokeStyle = `rgba(120,240,255,${intensity * 0.4})`;
-      actx.beginPath();
-      actx.moveTo(cx - 260, cy + offset);
-      actx.lineTo(cx + 260, cy + offset);
-      actx.stroke();
+    if (splitDist > 0) {
+      const dist = Math.sin(t * 0.01) * 200 * splitDist;
+      for (let dir of [-1, 1]) {
+        const offset = dir * dist;
+        const grad = actx.createRadialGradient(cx + offset, cy, 0, cx + offset, cy, 100);
+        grad.addColorStop(0, "rgba(100,220,255,0.4)");
+        grad.addColorStop(1, "rgba(0,0,0,0)");
+        actx.fillStyle = grad;
+        actx.beginPath();
+        actx.arc(cx + offset, cy, 100, 0, Math.PI * 2);
+        actx.fill();
+      }
     }
-  }
 
-  if (superposition) {
-    superTime += 0.02;
-    for (let i = 0; i < 15500; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const radius = 200 + Math.sin(superTime + i) * 80;
-      const x = cx + Math.cos(angle) * radius;
-      const y = cy + Math.sin(angle) * radius;
-      const alpha = 0.1 + 0.1 * Math.sin(superTime * 3 + i);
-      const colorPhase = Math.sin(superTime + i / 50);
-      const r = 100 + Math.floor(100 * (1 + colorPhase));
-      const g = 150 + Math.floor(80 * (1 - colorPhase));
-      const b = 255;
-      actx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
-      actx.fillRect(x, y, 2, 2);
+    if (showInterference) {
+      for (let i = -80; i <= 80; i++) {
+        const offset = i * 3;
+        const intensity = 0.7 + 0.3 * Math.cos(i * 0.2 + t * 0.1);
+        actx.strokeStyle = `rgba(120,240,255,${intensity * 0.4})`;
+        actx.beginPath();
+        actx.moveTo(cx - 260, cy + offset);
+        actx.lineTo(cx + 260, cy + offset);
+        actx.stroke();
+      }
     }
-  } else superTime = 0;
 
-  t++;
+    if (superposition) {
+      superTime += 0.02;
+      for (let i = 0; i < 1500; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const radius = 200 + Math.sin(superTime + i) * 80;
+        const x = cx + Math.cos(angle) * radius;
+        const y = cy + Math.sin(angle) * radius;
+        const alpha = 0.1 + 0.1 * Math.sin(superTime * 3 + i);
+        const colorPhase = Math.sin(superTime + i / 50);
+        const r = 100 + Math.floor(100 * (1 + colorPhase));
+        const g = 150 + Math.floor(80 * (1 - colorPhase));
+        const b = 255;
+        actx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+        actx.fillRect(x, y, 2, 2);
+      }
+    } else superTime = 0;
+
+    t++;
+    requestAnimationFrame(drawAtom);
+  }
   requestAnimationFrame(drawAtom);
-}
-requestAnimationFrame(drawAtom);
 
-/* ===== STATES / BUTTONS ===== */
-const btnLaser      = document.getElementById('btnLaser');
-const btnSplit      = document.getElementById('btnSplit');
-const btnSuper      = document.getElementById('btnSuper');
-const btnInterfere  = document.getElementById('btnInterfere');
-const btnReset      = document.getElementById('btnReset');
-
-const infoLaser     = document.getElementById('infoLaser');
-const infoSplit     = document.getElementById('infoSplit');
-const infoSuper     = document.getElementById('infoSuper');
-const infoInterfere = document.getElementById('infoInterfere');
-
-const laserState = { value: 1.0 };
-const splitState = { value: 0 };
-const superState = { value: false };
-const interfereState = { value: false };
-
-function toggleEffect(button, infoBox, stateVar, on, off) {
-  stateVar.value = stateVar.value === on ? off : on;
-  button.classList.toggle("active");
-  infoBox.classList.toggle("active");
-}
-btnLaser.onclick     = () => toggleEffect(btnLaser, infoLaser,     laserState,     2.5, 1.0);
-btnSplit.onclick     = () => toggleEffect(btnSplit, infoSplit,     splitState,     1.0, 0);
-btnSuper.onclick     = () => toggleEffect(btnSuper, infoSuper,     superState,     true, false);
-btnInterfere.onclick = () => toggleEffect(btnInterfere, infoInterfere, interfereState, true, false);
-
-btnReset.onclick = () => {
-  document.querySelectorAll("button").forEach(b => b.classList.remove("active"));
-  document.querySelectorAll(".info-box").forEach(i => i.classList.remove("active"));
-  laserState.value = 1.0; splitState.value = 0; superState.value = false; interfereState.value = false;
-  laserBoost = 1.0; splitDist = 0; superposition = false; showInterference = false;
-};
-
-function updateStates() {
-  laserBoost       = laserState.value;
-  splitDist        = splitState.value;
-  superposition    = superState.value;
-  showInterference = interfereState.value;
-  requestAnimationFrame(updateStates);
-}
-updateStates();
-
-/* ===== POPUPS ===== */
-const popupContainer = document.getElementById("popupContainer");
-function showPopup(title, text) {
-  popupContainer.innerHTML = `<div class="popup active"><h2>${title}</h2><p>${text}</p><button class="close-btn">Close</button></div>`;
-  popupContainer.querySelector(".close-btn").onclick = () => popupContainer.innerHTML = "";
-}
-
-const btnGoodbye = document.getElementById('btnGoodbye');
-const btnWhere   = document.getElementById('btnWhere');
-const btnQuantum = document.getElementById('btnQuantum');
-const btnInterf  = document.getElementById('btnInterf');
-const btnToolbox = document.getElementById('btnToolbox');
-
-btnGoodbye.onclick = () => showPopup(
-  "Goodbye from Alushi",
-  "Thank you for visiting my Quantum Interaction Lab. It has been a pleasure working with many of you over the years. " +
-  "Messing about with industrial controls, automation systems, PLCs, IRBs, and manufacturing processes has been great fun — and an incredible learning journey. I am truly grateful to all those who have shared their experience and support over the years. " + 
-  "But now, the next chapter begins, so I shall leave manufacturing so that I can work within engineering."
-);
-btnWhere.onclick = () => showPopup(
-  "Where Alushi is Going",
-  "Alushi is heading into the heart of the UK’s quantum revolution — joining the UK Quantum Technology Hub in Sensing, Imaging and Timing (QuSIT) with the University of Birmingham. " +
-  "There, the focus is on translating quantum science into engineered systems that can measure gravity, acceleration, and time with unprecedented precision. " +
-  "The work contributes directly to next-generation quantum gravimeters and navigation systems — sensors capable of detecting underground structures, geological layers, and gravitational anomalies invisible to conventional instruments. " +
-  "This environment combines academic research with industrial collaboration, bringing together physicists, electronics engineers, and photonics experts to make quantum sensing practical, reliable, and field-ready. " +
-  "It’s not just about understanding quantum behaviour — it’s about building the control systems, electronics, and optical platforms that make it usable in the real world. " +
-  "Alushi's job is no longer to use technology, but to invent it, wish him luck !."
-);
-btnQuantum.onclick = () => showPopup(
-  "What is Quantum Control?",
-  "Quantum control is about shaping the behaviour of atoms, ions, or photons with precisely timed electromagnetic fields — such as laser light, radiofrequency, or microwave pulses — so the system follows a desired path, like teaching a robot to move perfectly, but at nanosecond precision. It matters because better control means cleaner quantum states, which leads to higher sensitivity in quantum sensors and greater fidelity in quantum computing or communication systems. In sensing, that translates to measurable improvements in detecting gravity, acceleration, rotation, and magnetic or electric fields. The process works by preparing a quantum state, driving it with a sequence of pulses to split, redirect, and recombine matter waves, then sensing the phase difference that encodes environmental effects before reading out and applying feedback. For a control systems engineer, this is a system defined by extreme precision and high uncertainty — a world where every nanosecond, every pulse shape, and every phase offset matters."
-);
-btnInterf.onclick = () => showPopup(
-  "Atom Interferometry",
-  "Atom interferometry uses the wave nature of atoms to measure physical quantities like gravity, acceleration, and rotation with extraordinary precision. Instead of light waves, we use matter waves, splitting and recombining them with laser pulses that act as beam splitters and mirrors. As the atom’s two wave packets travel along separate paths, any external influence — such as gravity or motion — imprints a phase shift between them. When the two paths recombine, this phase difference creates an interference pattern that directly encodes the quantity we want to measure. The sensitivity of an atom interferometer scales with the laser wavelength, the time between pulses, and the control stability of the system. Even tiny vibrations, timing errors, or phase drifts can destroy contrast and precision. For a control systems engineer, atom interferometry is a highly dynamic system where laser timing, detuning, and phase locking must work together flawlessly. Each pulse sequence is a tightly choreographed experiment in which the control electronics determine whether you can read the universe’s subtlest forces or lose them to noise."
-);
-btnToolbox.onclick = () => showPopup(
-  "Alushi’s Toolbox",
-  "This is applied research — bridging theory and implementation through electronics, precision control, and system integration. " +
-  "I am tasked with developing the full control stack for a next-generation laser delivery system, covering simulation, hardware design, and experimental validation. " +
-  "That means designing high-frequency analog circuits, low-noise power electronics, and precision feedback systems that maintain laser stability at the quantum limit. " +
-  "Custom PCBs are designed, manufactured, and assembled in-house, supporting laser drivers, current regulators, temperature controllers, and high-speed modulation stages. " +
-  "Embedded microcontrollers and FPGAs handle real-time timing control, signal processing, and synchronization of optical pulses with sub-nanosecond precision. " +
-  "Lab experiments validate each stage, from component-level characterization to full system response under controlled conditions. " +
-  "Mechanical design and fabrication use CNC machining, FDM, resin, and powder 3D printing to build compact optical and electronic housings. " +
-  "Every iteration is measured, tuned, and optimized — fusing photonics, control theory, and hardware engineering into one coherent system. " +
-  "In essence, this work turns quantum sensing from delicate lab equipment into robust, engineered technology fit for the real world."
-);
-
-/* ===== AMBIENT AUDIO (user gesture) ===== */
-const quantumLoop = document.getElementById("quantumLoop");
-document.body.addEventListener("click", () => {
-  if (quantumLoop.paused) {
-    quantumLoop.volume = 0.3;
-    quantumLoop.play().catch(err => console.warn("Audio play blocked:", err));
+  // === STATES & CONTROLS ===
+  const laserState = { value: 1.0 }, splitState = { value: 0 }, superState = { value: false }, interfereState = { value: false };
+  function toggleEffect(button, infoBox, stateVar, on, off) {
+    stateVar.value = stateVar.value === on ? off : on;
+    button.classList.toggle("active");
+    infoBox.classList.toggle("active");
   }
-}, { once: true });
-</script>
-
-<script>
-/* ===== QUIZ LOGIC ===== */
-const quizData = [
-  {
-    q: "What does quantum control primarily adjust to steer quantum states?",
-    options: [
-      "Mechanical vibration profiles",
-      "Precisely timed EM fields (laser/RF/microwave)",
-      "Ambient temperature only",
-      "PCB copper thickness"
-    ],
-    a: 1,
-    why: "Quantum control uses precisely timed electromagnetic fields to shape state evolution (pulse timing, phase, detuning, amplitude)."
-  },
-  {
-    q: "In atom interferometry, a phase difference is imprinted between two matter-wave paths by…",
-    options: [
-      "Laser pulses acting as beam-splitters/mirrors",
-      "Cooling the atom to absolute zero",
-      "Spinning the vacuum chamber",
-      "Increasing PCB layer count"
-    ],
-    a: 0,
-    why: "Light pulses split/redirect/recombine matter waves; external fields or motion imprint a measurable phase."
-  },
-  {
-    q: "Which electronics are most critical for laser delivery control?",
-    options: [
-      "High-frequency analog, low-noise drivers & precision feedback",
-      "Only digital logic with no analog stages",
-      "Audio amplifiers with speakers",
-      "High-power motor inverters"
-    ],
-    a: 0,
-    why: "Stable laser systems rely on low-noise analog stages, precision current/temperature control, and tight feedback loops."
-  },
-  {
-    q: "Superposition helps sensing because…",
-    options: [
-      "It makes atoms glow brighter",
-      "It enables interference that encodes tiny environmental effects",
-      "It creates heavier atoms",
-      "It reduces the need for timing control"
-    ],
-    a: 1,
-    why: "Superposed paths interfere on recombination; their phase carries information about gravity/acceleration/fields."
-  },
-  {
-    q: "Control timing for pulses often needs to be…",
-    options: [
-      "Within seconds",
-      "Millisecond-grade",
-      "Microsecond to sub-nanosecond precision",
-      "Irrelevant"
-    ],
-    a: 2,
-    why: "Quantum pulse sequences demand extreme timing accuracy to maintain coherence and contrast."
+  btnLaser.onclick     = () => toggleEffect(btnLaser, infoLaser, laserState, 2.5, 1.0);
+  btnSplit.onclick     = () => toggleEffect(btnSplit, infoSplit, splitState, 1.0, 0);
+  btnSuper.onclick     = () => toggleEffect(btnSuper, infoSuper, superState, true, false);
+  btnInterfere.onclick = () => toggleEffect(btnInterfere, infoInterfere, interfereState, true, false);
+  btnReset.onclick     = () => {
+    document.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".info-box").forEach(i => i.classList.remove("active"));
+    laserState.value = 1.0; splitState.value = 0; superState.value = false; interfereState.value = false;
+    laserBoost = 1.0; splitDist = 0; superposition = false; showInterference = false;
+  };
+  function updateStates() {
+    laserBoost = laserState.value; splitDist = splitState.value;
+    superposition = superState.value; showInterference = interfereState.value;
+    requestAnimationFrame(updateStates);
   }
-];
+  updateStates();
 
-const quizEls = {
-  widget: document.getElementById("quizWidget"),
-  header: document.getElementById("quizHeader"),
-  toggle: document.getElementById("quizToggle"),
-  progress: document.getElementById("quizProgress"),
-  question: document.getElementById("quizQuestion"),
-  options: document.getElementById("quizOptions"),
-  prev: document.getElementById("quizPrev"),
-  next: document.getElementById("quizNext"),
-  result: document.getElementById("quizResult"),
-  restart: document.getElementById("quizRestart"),
-};
-
-let quizState = JSON.parse(localStorage.getItem("alushi_quiz_state") || "null") || {
-  i: 0,
-  answers: Array(quizData.length).fill(null),
-  finished: false,
-  score: 0
-};
-
-function saveQuiz() {
-  localStorage.setItem("alushi_quiz_state", JSON.stringify(quizState));
-}
-
-function renderQuiz() {
-  const { i, answers, finished, score } = quizState;
-  quizEls.progress.textContent = finished
-    ? `Completed • Score: ${score}/${quizData.length}`
-    : `Question ${i + 1}/${quizData.length}`;
-
-  quizEls.result.classList.add("hidden");
-  quizEls.restart.classList.add("hidden");
-
-  if (finished) {
-    quizEls.options.innerHTML = "";
-    quizEls.question.textContent = "Your results:";
-    quizEls.result.classList.remove("hidden");
-    quizEls.result.innerHTML = `
-      <div><strong>Score:</strong> ${score}/${quizData.length}</div>
-      <div style="margin-top:6px;font-size:0.95em;color:#9ef">
-        ${score === quizData.length
-          ? "Well done! You managed to pass a quantum quiz 🚀"
-          : score >= Math.ceil(quizData.length * 0.7)
-          ? "Almost! But you need to do better ⚙️"
-          : "You either didn't read the material, or you aren't quite cut out for it 🔁"}
-      </div>`;
-    quizEls.restart.classList.remove("hidden");
-    quizEls.prev.disabled = true;
-    quizEls.next.disabled = true;
-    return;
+  // === POPUPS ===
+  const popupContainer = document.getElementById("popupContainer");
+  function showPopup(title, text) {
+    popupContainer.innerHTML = `<div class="popup active"><h2>${title}</h2><p>${text}</p><button class="close-btn">Close</button></div>`;
+    popupContainer.querySelector(".close-btn").onclick = () => popupContainer.innerHTML = "";
   }
+  btnGoodbye.onclick = () => showPopup(
+    "Goodbye from Alushi",
+    "Thank you for visiting my Quantum Interaction Lab. It has been a pleasure working with many of you over the years. " +
+    "Messing about with industrial controls, automation systems, PLCs, IRBs, and manufacturing processes has been great fun — and an incredible learning journey. I am truly grateful to all those who have shared their experience and support over the years. " + 
+    "But now, the next chapter begins, so I shall now leave manufacturing so that I can pursue work within engineering."
+  );
+  btnWhere.onclick = () => showPopup(
+    "Where Alushi is Going",
+    "Alushi is heading into the heart of the UK’s quantum revolution — joining the UK Quantum Technology Hub in Sensing, Imaging and Timing (QuSIT) with the University of Birmingham. " +
+    "There, the focus is on translating quantum science into engineered systems that can measure gravity, acceleration, and time with unprecedented precision. " +
+    "The work contributes directly to next-generation quantum gravimeters and navigation systems — sensors capable of detecting underground structures, geological layers, and gravitational anomalies invisible to conventional instruments. " +
+    "This environment combines academic research with industrial collaboration, bringing together physicists, electronics engineers, and photonics experts to make quantum sensing practical, reliable, and field-ready. " +
+    "It’s not just about understanding quantum behaviour — it’s about building the control systems, electronics, and optical platforms that make it usable in the real world. " +
+    "Alushi's job is no longer to use technology, but to invent it, wish him luck !."
+  );
+  btnQuantum.onclick = () => showPopup(
+    "What is Quantum Control?",
+    "Quantum control is about shaping the behaviour of atoms, ions, or photons with precisely timed electromagnetic fields — such as laser light, radiofrequency, or microwave pulses — so the system follows a desired path, like teaching a robot to move perfectly, but at nanosecond precision. It matters because better control means cleaner quantum states, which leads to higher sensitivity in quantum sensors and greater fidelity in quantum computing or communication systems. In sensing, that translates to measurable improvements in detecting gravity, acceleration, rotation, and magnetic or electric fields. The process works by preparing a quantum state, driving it with a sequence of pulses to split, redirect, and recombine matter waves, then sensing the phase difference that encodes environmental effects before reading out and applying feedback. For a control systems engineer, this is a system defined by extreme precision and high uncertainty — a world where every nanosecond, every pulse shape, and every phase offset matters."
+  );
+  btnInterf.onclick = () => showPopup(
+    "Atom Interferometry",
+    "Atom interferometry uses the wave nature of atoms to measure physical quantities like gravity, acceleration, and rotation with extraordinary precision. Instead of light waves, we use matter waves, splitting and recombining them with laser pulses that act as beam splitters and mirrors. As the atom’s two wave packets travel along separate paths, any external influence — such as gravity or motion — imprints a phase shift between them. When the two paths recombine, this phase difference creates an interference pattern that directly encodes the quantity we want to measure. The sensitivity of an atom interferometer scales with the laser wavelength, the time between pulses, and the control stability of the system. Even tiny vibrations, timing errors, or phase drifts can destroy contrast and precision. For a control systems engineer, atom interferometry is a highly dynamic system where laser timing, detuning, and phase locking must work together flawlessly. Each pulse sequence is a tightly choreographed experiment in which the control electronics determine whether you can read the universe’s subtlest forces or lose them to noise."
+  );
+  btnToolbox.onclick = () => showPopup(
+    "Alushi’s Toolbox",
+    "This is applied research — bridging theory and implementation through electronics, precision control, and system integration. " +
+    "I am tasked with developing the full control stack for a next-generation laser delivery system, covering simulation, hardware design, and experimental validation. " +
+    "That means designing high-frequency analog circuits, low-noise power electronics, and precision feedback systems that maintain laser stability at the quantum limit. " +
+    "Custom PCBs are designed, manufactured, and assembled in-house, supporting laser drivers, current regulators, temperature controllers, and high-speed modulation stages. " +
+    "Embedded microcontrollers and FPGAs handle real-time timing control, signal processing, and synchronization of optical pulses with sub-nanosecond precision. " +
+    "Lab experiments validate each stage, from component-level characterization to full system response under controlled conditions. " +
+    "Mechanical design and fabrication use CNC machining, FDM, resin, and powder 3D printing to build compact optical and electronic housings. " +
+    "Every iteration is measured, tuned, and optimized — fusing photonics, control theory, and hardware engineering into one coherent system. " +
+    "In essence, this work turns quantum sensing from delicate lab equipment into robust, engineered technology fit for the real world."
+  );
 
-  // ✅ Ensure navigation buttons are active again after restart
-  quizEls.prev.disabled = (i === 0);
-  quizEls.next.disabled = false;
+  // === AMBIENT QUANTUM LOOP ===
+  const quantumLoop = document.getElementById("quantumLoop");
+  document.body.addEventListener("click", () => {
+    if (quantumLoop.paused) {
+      quantumLoop.volume = 0.3;
+      quantumLoop.play().catch(err => console.warn("Audio play blocked:", err));
+    }
+  }, { once: true });
 
-  // Normal question
-  const item = quizData[i];
-  quizEls.question.textContent = item.q;
-  quizEls.options.innerHTML = "";
-  item.options.forEach((opt, idx) => {
-    const btn = document.createElement("button");
-    btn.className = "quizOption" + (answers[i] === idx ? " selected" : "");
-    btn.textContent = opt;
-    btn.onclick = () => {
-      quizState.answers[i] = idx;
-      renderQuiz();
-      saveQuiz();
-    };
-    quizEls.options.appendChild(btn);
+  // Resize
+  window.addEventListener("resize", () => {
+    initMatrix();
+    atom.width = window.innerWidth;
+    atom.height = window.innerHeight;
   });
+  </script>
 
-  quizEls.next.textContent = (i === quizData.length - 1) ? "Finish ✓" : "Next →";
-}
+  <!-- QUIZ SCRIPT: runs after DOM is ready -->
+  <script>
+  document.addEventListener('DOMContentLoaded', function(){
+    const quizData = [
+      {
+        q: "What does quantum control primarily adjust to steer quantum states?",
+        options: [
+          "Mechanical vibration profiles",
+          "Precisely timed EM fields (laser/RF/microwave)",
+          "Ambient temperature only",
+          "PCB copper thickness"
+        ],
+        a: 1,
+        why: "Quantum control uses precisely timed electromagnetic fields to shape state evolution (pulse timing, phase, detuning, amplitude)."
+      },
+      {
+        q: "In atom interferometry, a phase difference is imprinted between two matter-wave paths by…",
+        options: [
+          "Laser pulses acting as beam-splitters/mirrors",
+          "Cooling the atom to absolute zero",
+          "Spinning the vacuum chamber",
+          "Increasing PCB layer count"
+        ],
+        a: 0,
+        why: "Light pulses split/redirect/recombine matter waves; external fields or motion imprint a measurable phase."
+      },
+      {
+        q: "Which electronics are most critical for laser delivery control?",
+        options: [
+          "High-frequency analog, low-noise drivers & precision feedback",
+          "Only digital logic with no analog stages",
+          "Audio amplifiers with speakers",
+          "High-power motor inverters"
+        ],
+        a: 0,
+        why: "Stable laser systems rely on low-noise analog stages, precision current/temperature control, and tight feedback loops."
+      },
+      {
+        q: "Superposition helps sensing because…",
+        options: [
+          "It makes atoms glow brighter",
+          "It enables interference that encodes tiny environmental effects",
+          "It creates heavier atoms",
+          "It reduces the need for timing control"
+        ],
+        a: 1,
+        why: "Superposed paths interfere on recombination; their phase carries information about gravity/acceleration/fields."
+      },
+      {
+        q: "Control timing for pulses often needs to be…",
+        options: [
+          "Within seconds",
+          "Millisecond-grade",
+          "Microsecond to sub-nanosecond precision",
+          "Irrelevant"
+        ],
+        a: 2,
+        why: "Quantum pulse sequences demand extreme timing accuracy to maintain coherence and contrast."
+      }
+    ];
 
+    const quizEls = {
+      widget:  document.getElementById("quizWidget"),
+      header:  document.getElementById("quizHeader"),
+      toggle:  document.getElementById("quizToggle"),
+      progress:document.getElementById("quizProgress"),
+      question:document.getElementById("quizQuestion"),
+      options: document.getElementById("quizOptions"),
+      prev:    document.getElementById("quizPrev"),
+      next:    document.getElementById("quizNext"),
+      result:  document.getElementById("quizResult"),
+      restart: document.getElementById("quizRestart"),
+    };
 
+    // Guard missing DOM
+    for (const [k,v] of Object.entries(quizEls)) {
+      if (!v) { console.warn("Quiz init: missing element", k); return; }
+    }
 
-quizEls.prev.onclick = () => {
-  if (quizState.i > 0) {
-    quizState.i--;
-    renderQuiz(); saveQuiz();
-  }
-};
+    let quizState = JSON.parse(localStorage.getItem("alushi_quiz_state") || "null") || {
+      i: 0,
+      answers: Array(quizData.length).fill(null),
+      finished: false,
+      score: 0
+    };
 
-quizEls.next.onclick = () => {
-  const { i } = quizState;
-  if (quizState.answers[i] == null) {
-    quizEls.options.style.boxShadow = "0 0 18px #ff408070";
-    setTimeout(() => quizEls.options.style.boxShadow = "none", 300);
-    return;
-  }
-  if (i < quizData.length - 1) {
-    quizState.i++;
-  } else {
-    // finish + score
-    let s = 0;
-    quizData.forEach((q, idx) => { if (q.a === quizState.answers[idx]) s++; });
-    quizState.score = s;
-    quizState.finished = true;
-  }
-  renderQuiz(); saveQuiz();
-};
+    const saveQuiz = () => localStorage.setItem("alushi_quiz_state", JSON.stringify(quizState));
 
-quizEls.restart.onclick = () => {
-  quizState = { i: 0, answers: Array(quizData.length).fill(null), finished: false, score: 0 };
-  renderQuiz(); saveQuiz();
-};
+    function renderQuiz() {
+      const { i, answers, finished, score } = quizState;
+      quizEls.progress.textContent = finished
+        ? `Completed • Score: ${score}/${quizData.length}`
+        : `Question ${i + 1}/${quizData.length}`;
 
-// expand/collapse
-quizEls.toggle.onclick = () => {
-  const isCollapsed = quizEls.widget.classList.toggle("quiz-collapsed");
-  quizEls.toggle.textContent = isCollapsed ? "▼" : "▲";
-};
+      quizEls.result.classList.add("hidden");
+      quizEls.restart.classList.add("hidden");
 
-renderQuiz();
-</script>
+      if (finished) {
+        quizEls.options.innerHTML = "";
+        quizEls.question.textContent = "Great work! Your results:";
+        quizEls.result.classList.remove("hidden");
+        quizEls.result.innerHTML = `
+          <div><strong>Score:</strong> ${score}/${quizData.length}</div>
+          <div style="margin-top:6px;font-size:0.95em;color:#9ef">
+            ${score === quizData.length
+              ? "Perfect! You’re ready to build quantum kit 🚀"
+              : score >= Math.ceil(quizData.length * 0.7)
+              ? "Solid! You’ve got the right instincts ⚙️"
+              : "Nice start! Explore the popups and try again 🔁"}
+          </div>`;
+        quizEls.restart.classList.remove("hidden");
+        quizEls.prev.disabled = true;
+        quizEls.next.disabled = true;
+        return;
+      }
+
+      const item = quizData[i];
+      quizEls.question.textContent = item.q;
+
+      quizEls.options.innerHTML = "";
+      item.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "quizOption" + (answers[i] === idx ? " selected" : "");
+        btn.textContent = opt;
+        btn.onclick = () => {
+          quizState.answers[i] = idx;
+          renderQuiz();
+          saveQuiz();
+        };
+        quizEls.options.appendChild(btn);
+      });
+
+      quizEls.prev.disabled = (i === 0);
+      quizEls.next.textContent = (i === quizData.length - 1) ? "Finish ✓" : "Next →";
+    }
+
+    quizEls.prev.onclick = () => {
+      if (quizState.i > 0) {
+        quizState.i--;
+        renderQuiz(); saveQuiz();
+      }
+    };
+
+    quizEls.next.onclick = () => {
+      const { i } = quizState;
+      if (quizState.answers[i] == null) {
+        quizEls.options.style.boxShadow = "0 0 18px #ff408070";
+        setTimeout(() => quizEls.options.style.boxShadow = "none", 300);
+        return;
+      }
+      if (i < quizData.length - 1) {
+        quizState.i++;
+      } else {
+        let s = 0;
+        quizData.forEach((q, idx) => { if (q.a === quizState.answers[idx]) s++; });
+        quizState.score = s;
+        quizState.finished = true;
+      }
+      renderQuiz(); saveQuiz();
+    };
+
+    quizEls.restart.onclick = () => {
+      quizState = { i: 0, answers: Array(quizData.length).fill(null), finished: false, score: 0 };
+      renderQuiz(); saveQuiz();
+    };
+
+    // expand/collapse
+    const toggle = () => {
+      const collapsed = quizEls.widget.classList.toggle("quiz-collapsed");
+      quizEls.toggle.textContent = collapsed ? "▼" : "▲";
+      localStorage.setItem('alushi_quiz_open', collapsed ? '0' : '1');
+    };
+    quizEls.toggle.onclick = toggle;
+    quizEls.header.onclick = (e)=>{ if(e.target!==quizEls.toggle) toggle(); };
+
+    // Restore open/closed
+    const openPref = localStorage.getItem('alushi_quiz_open');
+    if (openPref==='0'){ quizEls.widget.classList.add('quiz-collapsed'); quizEls.toggle.textContent='▼'; }
+    else { quizEls.widget.classList.remove('quiz-collapsed'); quizEls.toggle.textContent='▲'; }
+
+    renderQuiz();
+  });
+  </script>
 </body>
 </html>
