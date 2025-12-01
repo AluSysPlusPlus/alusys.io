@@ -7,6 +7,7 @@
   content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
 />
 <title>Alushi's Quantum Lab</title>
+<link rel="icon" type="image/png" href="favicon.png">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -438,11 +439,186 @@
   @media (max-width: 540px){
     #videoDisclaimer{ display:none; }
   }
+
+  /* Popup content wrapper so layout is clean */
+.popup-content {
+  max-width: 100%;
+}
+
+/* Slideshow inside popup */
+.slideshow {
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Slideshow images – constrain size */
+.slideshow img {
+  max-width: 100%;
+  max-height: 180px;    /* << shrink this if still feels big */
+  width: auto;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #00ffff55;
+  display: none;        /* hidden by default */
+}
+
+/* Only the active slide is shown */
+.slideshow img.active {
+  display: block;
+}
+
+/* Make sure popup itself never explodes off-screen */
+.popup {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Close button on its own line, centered */
+.popup .close-btn {
+  display: block;
+  margin: 15px auto 0;
+}
+
+/* Slideshow is already relative for positioning extras if needed */
+.slideshow {
+  position: relative;
+}
+
+/* Outer bar */
+.slideshow-progress {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(0, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+/* Inner filling bar */
+.slideshow-progress-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #00ffff, #00aaff);
+  box-shadow: 0 0 8px #00ffffaa;
+}
+
+/* Animation for one fill cycle */
+.slideshow-progress-animate {
+  animation: slideshowFill var(--slide-interval, 3s) linear forwards;
+}
+
+@keyframes slideshowFill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+#topRightLogo {
+  position: fixed;
+  top: calc(20px + var(--safe-top));
+  right: calc(25px + var(--safe-right));
+  z-index: 200;
+  padding: 10px 16px;
+  border-radius: 14px;
+  background: rgba(0, 25, 45, 0.75);
+  border: 1px solid #00ffff80;
+  box-shadow: 0 0 25px #00ffff55;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  animation: logoPulse 4s infinite ease-in-out;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+#topRightLogo img {
+  width: clamp(40px, 6vw, 130px);
+  filter: drop-shadow(0 0 14px #00ffffc0);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Hover effect */
+#topRightLogo:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 40px #00ffffff;
+}
+
+/* Main pulsing glow */
+@keyframes logoPulse {
+  0%   { box-shadow: 0 0 22px #00ffff55; }
+  50%  { box-shadow: 0 0 45px #00ffffaa; }
+  100% { box-shadow: 0 0 22px #00ffff55; }
+}
+
+/* Optional hologram sweep */
+#topRightLogo::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 120%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(0,255,255,0.25) 50%,
+    transparent 100%
+  );
+  animation: holoSweep 6s infinite;
+}
+
+@keyframes holoSweep {
+  0%   { left: -120%; opacity: 0; }
+  10%  { opacity: 1; }
+  40%  { left: 120%; opacity: 0; }
+  100% { left: 120%; opacity: 0; }
+}
+
+#soundToggle {
+  position: fixed;
+  bottom: calc(90px + var(--safe-bottom)); 
+  right: calc(25px + var(--safe-right));
+  width: 45px;
+  height: 45px;
+  background: rgba(0, 255, 255, 0.04);
+  border: 1px solid #00ffff80;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00ffff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  z-index: 60;
+  box-shadow: 0 0 15px #00ffff40;
+  backdrop-filter: blur(6px);
+  transition: all 0.25s ease;
+}
+
+#soundToggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px #00ffffff;
+}
+
+#soundToggle.muted {
+  color: #ff8080;
+  border-color: #ff808080;
+  box-shadow: 0 0 15px #ff808040;
+}
+
 </style>
 </head>
 <body>
   <div id="title">Welcome to Alushi's Quantum Interaction Lab</div>
   <div id="learnChange">✨ Learn about my change ↓</div>
+  <div id="topRightLogo">
+   <img src="alusys_quantum.png" alt="AluSys Logo">
+  </div>
+  <div id="soundToggle">🔊</div>
 
   <canvas id="matrix"></canvas>
   <canvas id="atom"></canvas>
@@ -736,9 +912,110 @@ updateStates();
 
 /* ===== POPUPS ===== */
 const popupContainer = document.getElementById("popupContainer");
-function showPopup(title, text) {
-  popupContainer.innerHTML = `<div class="popup active"><h2>${title}</h2><p>${text}</p><button class="close-btn">Close</button></div>`;
-  popupContainer.querySelector(".close-btn").onclick = () => popupContainer.innerHTML = "";
+
+function showPopup(title, html) {
+  popupContainer.innerHTML =
+    `<div class="popup active">
+       <h2>${title}</h2>
+       <div class="popup-content">
+         ${html}
+       </div>
+       <button class="close-btn">Close</button>
+     </div>`;
+
+  popupContainer.querySelector(".close-btn").onclick =
+    () => popupContainer.innerHTML = "";
+
+  initPopupSlides();   // set up slideshow if one exists
+}
+
+document.addEventListener("click", function qcHandler(e) {
+  const vid = document.getElementById("qcVideo");
+  const btn = document.getElementById("qcAudioBtn");
+
+  // Only run when the popup is open
+  if (!vid || !btn) return;
+
+  // If user clicked the button
+  if (e.target === btn) {
+    vid.muted = false;
+    vid.play().catch(err => console.warn(err));
+
+    btn.textContent = "🔇 Mute Video Audio";
+    btn.style.color = "#ff8080";
+    btn.style.borderColor = "#ff8080";
+    btn.style.textShadow = "0 0 8px #ff8080";
+
+    // Toggle mute on further clicks
+    btn.onclick = () => {
+      vid.muted = !vid.muted;
+      if (vid.muted) {
+        btn.textContent = "🔊 Enable Video Audio";
+        btn.style.color = "#0ff";
+        btn.style.borderColor = "#0ff";
+        btn.style.textShadow = "0 0 8px #0ff";
+      } else {
+        btn.textContent = "🔇 Mute Video Audio";
+        btn.style.color = "#ff8080";
+        btn.style.borderColor = "#ff8080";
+        btn.style.textShadow = "0 0 8px #ff8080";
+      }
+    };
+
+    // Remove handler to avoid multiple binds
+    document.removeEventListener("click", qcHandler);
+  }
+});
+
+
+function initPopupSlides() {
+  const container = popupContainer.querySelector('.slideshow');
+  if (!container) return;
+
+  const imgs = Array.from(container.querySelectorAll('img'));
+  if (imgs.length === 0) return;
+
+  const progressOuter = container.querySelector('.slideshow-progress');
+  const progressInner = container.querySelector('.slideshow-progress-inner');
+
+  const INTERVAL_MS = 3000; // 3 seconds per slide
+
+  // expose time to CSS (for animation duration)
+  if (progressOuter) {
+    progressOuter.style.setProperty('--slide-interval', `${INTERVAL_MS}ms`);
+  }
+
+  let idx = 0;
+  imgs.forEach(img => img.classList.remove('active'));
+  imgs[0].classList.add('active');
+
+  // function to restart progress bar animation
+  function restartProgress() {
+    if (!progressInner) return;
+    progressInner.classList.remove('slideshow-progress-animate');
+    // force reflow to reset the CSS animation
+    void progressInner.offsetWidth;
+    progressInner.classList.add('slideshow-progress-animate');
+  }
+
+  // start first fill
+  restartProgress();
+
+  const interval = setInterval(() => {
+    // if popup is closed, stop
+    if (!document.body.contains(container)) {
+      clearInterval(interval);
+      return;
+    }
+
+    // next slide
+    imgs[idx].classList.remove('active');
+    idx = (idx + 1) % imgs.length;
+    imgs[idx].classList.add('active');
+
+    // restart loading bar
+    restartProgress();
+  }, INTERVAL_MS);
 }
 
 const btnGoodbye = document.getElementById('btnGoodbye');
@@ -749,39 +1026,248 @@ const btnToolbox = document.getElementById('btnToolbox');
 
 btnGoodbye.onclick = () => showPopup(
   "Goodbye from Alushi",
-  "Thank you for visiting my Quantum Interaction Lab. It has been a pleasure working with many of you over the years. " +
-  "Messing about with industrial controls, automation systems, PLCs, IRBs, and manufacturing processes has been great fun — and an incredible learning journey. I am truly grateful to all those who have shared their experience and support over the years. " + 
-  "But now, the next chapter begins, so I shall leave manufacturing so that I can work within engineering."
+  `
+  <p>
+    Thank you for visiting my Quantum Interaction Lab. It has been a pleasure
+    working with many of you over the years. Messing about with industrial
+    controls, automation systems, PLCs, IRBs, and manufacturing processes has
+    been great fun — and an incredible learning journey.
+  </p>
+
+  <p>
+    But now, the next chapter begins, so I shall leave manufacturing to work
+    within engineering.
+  </p>
+
+  <!-- AUDIO BUTTON -->
+  <div id="gbAudioBtn"
+       style="
+         margin: 10px auto 5px;
+         padding: 6px 14px;
+         background: rgba(0,255,255,0.15);
+         border: 1px solid #0ff;
+         border-radius: 6px;
+         width: fit-content;
+         cursor: pointer;
+         color: #0ff;
+         text-shadow: 0 0 8px #0ff;
+         font-family: 'Orbitron', monospace;
+       ">
+    🔊 Enable Video Audio
+  </div>
+
+  <!-- VIDEO -->
+  <div style="margin-top:10px; display:flex; justify-content:center;">
+    <video
+      id="gbVideo"
+      src="videos/Goodbye_Alushi.mp4"
+      muted
+      loop
+      playsinline
+      style="
+        width: 100%;
+        max-width: 420px;
+        border-radius: 12px;
+        outline: 1px solid rgba(0,255,255,0.4);
+        box-shadow: 0 0 15px rgba(0,255,255,0.3);
+      ">
+    </video>
+  </div>
+  `
 );
+
 btnWhere.onclick = () => showPopup(
   "Where Alushi is Going",
-  "Alushi is heading into the heart of the UK’s quantum revolution — joining the UK Quantum Technology Hub in Sensing, Imaging and Timing (QuSIT) with the University of Birmingham. " +
-  "There, the focus is on translating quantum science into engineered systems that can measure gravity, acceleration, and time with unprecedented precision. " +
-  "The work contributes directly to next-generation quantum gravimeters and navigation systems — sensors capable of detecting underground structures, geological layers, and gravitational anomalies invisible to conventional instruments. " +
-  "This environment combines academic research with industrial collaboration, bringing together physicists, electronics engineers, and photonics experts to make quantum sensing practical, reliable, and field-ready. " +
-  "It’s not just about understanding quantum behaviour — it’s about building the control systems, electronics, and optical platforms that make it usable in the real world. " +
-  "Alushi's job is no longer to use technology, but to invent it, wish him luck !."
+  `
+  <p>
+    Alushi is heading into the heart of the UK’s quantum revolution — joining the
+    UK Quantum Technology Hub in Sensing, Imaging and Timing (QuSIT) with the
+    University of Birmingham. There, the focus is on translating quantum science
+    into engineered systems that can measure gravity, acceleration, and time with
+    unprecedented precision.
+  </p>
+
+  <p>
+    The work contributes directly to next-generation quantum gravimeters and navigation
+    systems — sensors capable of detecting underground structures, geological layers,
+    and gravitational anomalies invisible to conventional instruments.
+  </p>
+
+  <p>
+    This environment combines academic research with industrial collaboration, bringing
+    together physicists, electronics engineers, and photonics experts to make quantum
+    sensing practical, reliable, and field-ready. It’s not just about understanding
+    quantum behaviour — it’s about building the control systems, electronics, and
+    optical platforms that make it usable in the real world.
+  </p>
+
+
+  <!-- Logos -->
+  <div style="display:flex;justify-content:center;align-items:center;gap:18px;flex-wrap:wrap;margin-top:8px;">
+    <img src="QuSIT_Logo.png" alt="QuSIT logo"
+         style="max-height:60px;max-width:45%;height:auto;filter:drop-shadow(0 0 8px #00ffff);">
+    <img src="UoB_Logo.png" alt="University of Birmingham logo"
+         style="max-height:60px;max-width:45%;height:auto;filter:drop-shadow(0 0 8px #00ffff);">
+  </div>
+
+  <!-- External Links Section -->
+  <div style="margin-top:10px;text-align:center;font-family:'Orbitron',monospace;color:#0ff;">
+    <div style="margin-bottom:6px;">Links to the official sites:</div>
+
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <a href="https://qusit.org/" target="_blank"
+         style="color:#00ffff;text-decoration:none;text-shadow:0 0 6px #00ffff;">
+         🔗 QuSIT – Quantum Sensing, Imaging & Timing Hub - Place of Work
+      </a>
+
+      <a href="https://www.npl.co.uk/research/quantum/npl-quantum-programme/national-quantum-technology-programme-hubs/sensors-and-timing"
+         target="_blank"
+         style="color:#00ffff;text-decoration:none;text-shadow:0 0 3px #00ffff;">
+         🔗 National Physics Laboratory – Sensors & Timing Hub - Umbrella Org
+      </a>
+
+      <a href="https://uknqt.ukri.org/" target="_blank"
+         style="color:#00ffff;text-decoration:none;text-shadow:0 0 6px #00ffff;">
+         🔗 UK National Quantum Technologies Programme - Umbrella Org
+      </a>
+
+      <a href="https://www.delta-g.co.uk/" target="_blank"
+         style="color:#00ffff;text-decoration:none;text-shadow:0 0 6px #00ffff;">
+         🔗 Delta-G – Quantum Gravity Sensors - Birmingham QuSIT Spinoff
+      </a>
+    </div>
+  </div>
+  `
 );
+
+
 btnQuantum.onclick = () => showPopup(
   "What is Quantum Control?",
-  "Quantum control is about shaping the behaviour of atoms, ions, or photons with precisely timed electromagnetic fields — such as laser light, radiofrequency, or microwave pulses — so the system follows a desired path, like teaching a robot to move perfectly, but at nanosecond precision. It matters because better control means cleaner quantum states, which leads to higher sensitivity in quantum sensors and greater fidelity in quantum computing or communication systems. In sensing, that translates to measurable improvements in detecting gravity, acceleration, rotation, and magnetic or electric fields. The process works by preparing a quantum state, driving it with a sequence of pulses to split, redirect, and recombine matter waves, then sensing the phase difference that encodes environmental effects before reading out and applying feedback. For a control systems engineer, this is a system defined by extreme precision and high uncertainty — a world where every nanosecond, every pulse shape, and every phase offset matters."
+  `
+  <p>
+    Quantum control is about shaping the behaviour of atoms, ions, or photons with
+    precisely timed electromagnetic fields — such as laser light, radiofrequency, or
+    microwave pulses — so the system follows a desired path at nanosecond–femtosecond
+    precision.
+  </p>
+
+  <p>
+    Better control means cleaner quantum states, leading to higher sensitivity in
+    quantum sensors and greater fidelity in quantum computing and communication
+    systems.
+  </p>
+
+  <p>
+    Every nanosecond, pulse shape, phase offset, and detuning change matters — making
+    this work a real-world control engineering challenge at the quantum scale.
+  </p>
+
+  <!-- AUDIO TOGGLE BUTTON -->
+  <div id="qcAudioBtn"
+       style="
+         margin: 10px auto 5px;
+         padding: 6px 14px;
+         background: rgba(0,255,255,0.15);
+         border: 1px solid #0ff;
+         border-radius: 6px;
+         width: fit-content;
+         cursor: pointer;
+         color: #0ff;
+         text-shadow: 0 0 8px #0ff;
+         font-family: 'Orbitron', monospace;
+       ">
+    🔊 Enable Video Audio
+  </div>
+
+  <!-- VIDEO -->
+  <div style="margin-top:10px; display:flex; justify-content:center;">
+    <video
+      id="qcVideo"
+      src="videos/Quantum_Control.mp4"
+      muted
+      loop
+      playsinline
+      style="
+        width: 100%;
+        max-width: 420px;
+        border-radius: 12px;
+        outline: 1px solid rgba(0,255,255,0.4);
+        box-shadow: 0 0 15px rgba(0,255,255,0.3);
+      ">
+    </video>
+  </div>
+  `
 );
+
 btnInterf.onclick = () => showPopup(
   "Atom Interferometry",
-  "Atom interferometry uses the wave nature of atoms to measure physical quantities like gravity, acceleration, and rotation with extraordinary precision. Instead of light waves, we use matter waves, splitting and recombining them with laser pulses that act as beam splitters and mirrors. As the atom’s two wave packets travel along separate paths, any external influence — such as gravity or motion — imprints a phase shift between them. When the two paths recombine, this phase difference creates an interference pattern that directly encodes the quantity we want to measure. The sensitivity of an atom interferometer scales with the laser wavelength, the time between pulses, and the control stability of the system. Even tiny vibrations, timing errors, or phase drifts can destroy contrast and precision. For a control systems engineer, atom interferometry is a highly dynamic system where laser timing, detuning, and phase locking must work together flawlessly. Each pulse sequence is a tightly choreographed experiment in which the control electronics determine whether you can read the universe’s subtlest forces or lose them to noise."
+  `<p>
+    Atom interferometry uses the wave nature of atoms to measure physical quantities
+    like gravity, acceleration, and rotation with extraordinary precision. Instead of
+    light waves, we use matter waves, splitting and recombining them with laser pulses
+    that act as beam splitters and mirrors. As the atom’s two wave packets travel along
+    separate paths, any external influence — such as gravity or motion — imprints a
+    phase shift between them. When the two paths recombine, this phase difference
+    creates an interference pattern that directly encodes the quantity we want to
+    measure.
+  </p>
+  <p>
+    The sensitivity of an atom interferometer scales with the laser wavelength, the
+    time between pulses, and the control stability of the system. Even tiny vibrations,
+    timing errors, or phase drifts can destroy contrast and precision. The slideshow below shows the work so far at QuSIT by Rammeloo, Stray, Lamb et al.
+  </p>
+
+  <div class="slideshow">
+    <img src="first_prototype_rammeloo.png" alt="early prototype - rammeloo - QuSIT">
+    <img src="first_prototype_rammeloo_2.png" alt="early prototype - rammeloo - QuSIT">
+    <img src="graphical_lamb.png" alt="schematic - lamb - QuSIT">
+    <img src="portable_lamb.png" alt="early portable interferometer - lamb - QuSIT">
+    <img src="raman_rammeloo.png" alt="raman - rammeloo - QuSIT">
+    <img src="stray_interferometer.png" alt="interferometer - stray - QuSIT">
+    <img src="stray_interferometer_2.png" alt="interferometer - stray - QuSIT">
+    <img src="stray_interferometer_3.png" alt="interferometer - stray - QuSIT">
+    <img src="boat_trial.jpg" alt="boat - QuSIT">
+
+    <!-- tiny loading bar -->
+    <div class="slideshow-progress">
+      <div class="slideshow-progress-inner"></div>
+    </div>
+  </div>`
 );
+
 btnToolbox.onclick = () => showPopup(
   "Alushi’s Toolbox",
-  "This is applied research — bridging theory and implementation through electronics, precision control, and system integration. " +
-  "I am tasked with developing the full control stack for a next-generation laser delivery system, covering simulation, hardware design, and experimental validation. " +
-  "That means designing high-frequency analog circuits, low-noise power electronics, and precision feedback systems that maintain laser stability at the quantum limit. " +
-  "Custom PCBs are designed, manufactured, and assembled in-house, supporting laser drivers, current regulators, temperature controllers, and high-speed modulation stages. " +
-  "Embedded microcontrollers and FPGAs handle real-time timing control, signal processing, and synchronization of optical pulses with sub-nanosecond precision. " +
-  "Lab experiments validate each stage, from component-level characterization to full system response under controlled conditions. " +
-  "Mechanical design and fabrication use CNC machining, FDM, resin, and powder 3D printing to build compact optical and electronic housings. " +
-  "Every iteration is measured, tuned, and optimized — fusing photonics, control theory, and hardware engineering into one coherent system. " +
-  "In essence, this work turns quantum sensing from delicate lab equipment into robust, engineered technology fit for the real world."
+  `
+  <p>This is applied research — bridging theory and implementation through electronics, precision control, and system integration.
+  I am tasked with developing the full control stack for a next-generation laser delivery system, covering simulation, hardware design,
+  and experimental validation. That means designing high-frequency analog circuits, low-noise power electronics, and precision feedback systems that maintain laser
+  stability at the quantum limit. Custom PCBs are designed, manufactured, and assembled in-house, supporting laser drivers, current regulators,
+  temperature controllers, and high-speed modulation stages. Embedded microcontrollers and FPGAs handle real-time timing control, signal processing, and synchronization of optical pulses with
+  sub-nanosecond precision. Lab experiments validate each stage, from component-level characterization to full system response under
+  controlled conditions. Mechanical design and fabrication use CNC machining, FDM, resin, and powder 3D printing to build compact optical and electronic housings.
+  Every iteration is measured, tuned, and optimized — fusing photonics, control theory, and hardware engineering into one coherent system.</p>
+
+  <!-- VIDEO -->
+  <div style="margin-top:20px; display:flex; justify-content:center;">
+    <video 
+      src="videos/toolbox_demo.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+      style="
+        width: 100%;
+        max-width: 420px;
+        border-radius: 12px;
+        outline: 1px solid rgba(0,255,255,0.4);
+        box-shadow: 0 0 15px rgba(0,255,255,0.3);
+        pointer-events: none; /* makes the video unclickable */
+      ">
+    </video>
+  </div>
+  `
 );
+
 
 /* Make the right badge trigger the existing Goodbye popup */
 const rightPaneBadge = document.getElementById('rightPaneBadge');
@@ -797,7 +1283,28 @@ document.body.addEventListener("click", () => {
     quantumLoop.play().catch(err => console.warn("Audio play blocked:", err));
   }
 }, { once: true });
+
+
+const toggleBtn = document.getElementById("soundToggle");
+const audio = document.getElementById("quantumLoop");
+
+toggleBtn.addEventListener("click", (e) => {
+  e.stopPropagation(); // prevent triggering the page click that starts audio
+
+  if (audio.muted) {
+    audio.muted = false;
+    toggleBtn.textContent = "🔊";   // unmuted icon
+    toggleBtn.classList.remove("muted");
+  } else {
+    audio.muted = true;
+    toggleBtn.textContent = "🔇";   // muted icon
+    toggleBtn.classList.add("muted");
+  }
+});
+
 </script>
+ 
+
 
 <script>
 /* ===== VIDEO PANE LOGIC (targets ALL .qvid videos, left + right) ===== */
@@ -826,6 +1333,50 @@ document.body.addEventListener("click", () => {
     else tryPlayAll();
   });
 })();
+
+
+
+document.addEventListener("click", function gbHandler(e) {
+  const vid = document.getElementById("gbVideo");
+  const btn = document.getElementById("gbAudioBtn");
+
+  if (!vid || !btn) return;
+
+  // User clicked the enable-audio button
+  if (e.target === btn) {
+    vid.muted = false;
+    vid.play().catch(err => console.warn(err));
+
+    btn.textContent = "🔇 Mute Video Audio";
+    btn.style.color = "#ff8080";
+    btn.style.borderColor = "#ff8080";
+    btn.style.textShadow = "0 0 8px #ff8080";
+
+    // Toggle mute/unmute on further clicks
+    btn.onclick = () => {
+      vid.muted = !vid.muted;
+      if (vid.muted) {
+        btn.textContent = "🔊 Enable Video Audio";
+        btn.style.color = "#0ff";
+        btn.style.borderColor = "#0ff";
+        btn.style.textShadow = "0 0 8px #0ff";
+      } else {
+        btn.textContent = "🔇 Mute Video Audio";
+        btn.style.color = "#ff8080";
+        btn.style.borderColor = "#ff8080";
+        btn.style.textShadow = "0 0 8px #ff8080";
+      }
+    };
+
+    document.removeEventListener("click", gbHandler);
+  }
+});
+
+
+
+
+
+
 </script>
 
 <script>
