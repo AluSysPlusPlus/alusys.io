@@ -610,6 +610,20 @@
   box-shadow: 0 0 15px #ff808040;
 }
 
+#soundLabel {
+  position: fixed;
+  bottom: calc(90px + var(--safe-bottom));
+  right: calc(85px + var(--safe-right));  /* pushes label left of button */
+  color: #00ffff;
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(0.9rem, 1.2vw, 1.15rem);
+  text-shadow: 0 0 8px #00ffff, 0 0 16px #00aaff;
+  z-index: 60;
+  opacity: 0.9;
+  pointer-events: none; /* label is NOT clickable */
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
 </style>
 </head>
 <body>
@@ -619,6 +633,7 @@
    <img src="alusys_quantum.png" alt="AluSys Logo">
   </div>
   <div id="soundToggle">🔊</div>
+  <div id="soundLabel">MUTE / UNMUTE Quantum Mechanics Audio</div>
 
   <canvas id="matrix"></canvas>
   <canvas id="atom"></canvas>
@@ -680,7 +695,7 @@
     <a id="linkedinLink" href="https://www.linkedin.com/in/luca-alushi" target="_blank" title="Connect on LinkedIn">
       <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn">
     </a>
-    <span id="linkedinText">Keep in contact on LinkedIn</span>
+    <span id="linkedinText"> ← Keep in contact on LinkedIn</span>
   </div>
 
   <!-- QUIZ WIDGET -->
@@ -1086,7 +1101,29 @@ btnWhere.onclick = () => showPopup(
     into engineered systems that can measure gravity, acceleration, and time with
     unprecedented precision.
   </p>
+  <!-- Venn Diagram -->
+  <div style="
+    margin-top:20px;
+    display:flex;
+    justify-content:center;
+    padding: 6px;
+    background: rgba(0,20,40,0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(0,255,255,0.3);
+    box-shadow: 0 0 15px rgba(0,255,255,0.25);
+  ">
+    <img src="venn_diagram.jpg"
+       alt="Venn Diagram"
+       style="
+         width: 100%;
+         max-width: 500px;
+         height: auto;
+         border-radius: 10px;
+         box-shadow: 0 0 12px #00ffff60;
+       ">
+  </div>
 
+  
   <p>
     The work contributes directly to next-generation quantum gravimeters and navigation
     systems — sensors capable of detecting underground structures, geological layers,
