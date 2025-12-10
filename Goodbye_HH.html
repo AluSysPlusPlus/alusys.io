@@ -30,7 +30,19 @@
     -webkit-touch-callout: none;
     user-select: none;
     touch-action: manipulation;
+
+    /* default control-engineering cursor */
+    cursor: url("control_cursor.png") 32 32, auto;
   }
+
+  /* Click cursor ONLY on the Enable Video Audio buttons */
+#qcAudioBtn,
+#gbAudioBtn {
+  cursor: url("control_clicker.png") 32 32, pointer;
+}
+
+
+  
 
   /* Canvases fill screen with fixed positioning (prevents Safari bar shifts) */
   canvas {
@@ -92,7 +104,6 @@
     font-size: clamp(0.85rem, 1vw + 0.6rem, 1rem);
     padding: clamp(6px, 0.8vw, 8px) clamp(10px, 1.2vw, 16px);
     border-radius: 5px;
-    cursor: pointer;
     text-shadow: 0 0 6px #0ff;
     transition: all 0.3s;
   }
@@ -163,7 +174,7 @@
     background: none;
     border: 1px solid #0ff;
     color: #0ff; padding: 5px 15px;
-    border-radius: 5px; cursor: pointer; font-size: 0.9em;
+    border-radius: 5px; font-size: 0.9em;
   }
   .close-btn:hover { background: rgba(0,255,255,0.2); }
 
@@ -275,7 +286,7 @@
   }
   #quizToggle {
     background: transparent; border: 1px solid #0ff; color: #0ff;
-    padding: 2px 8px; border-radius: 8px; cursor: pointer;
+    padding: 2px 8px; border-radius: 8px;
   }
   #quizBody { padding: 12px; max-height: 400px; overflow: hidden; transition: max-height 0.4s ease, opacity 0.4s ease; opacity: 1; }
   .quiz-collapsed #quizBody { max-height: 0; opacity: 0; pointer-events: none; }
@@ -288,7 +299,7 @@
     background: rgba(0, 255, 255, 0.06);
     border: 1px solid #0ff3;
     color: #aef; padding: 8px 10px; border-radius: 10px;
-    cursor: pointer; text-align: left;
+    text-align: left;
     transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s;
   }
   .quizOption:hover { transform: translateY(-1px); box-shadow: 0 0 12px #00ffff40; }
@@ -296,9 +307,9 @@
   #quizFooter { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; }
   #quizFooter button, #quizRestart {
     background: rgba(0, 255, 255, 0.1); border: 1px solid #0ff; color: #0ff;
-    padding: 6px 10px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
+    padding: 6px 10px; border-radius: 8px; transition: all 0.2s ease;
   }
-  #quizFooter button:disabled { opacity: 0.4; cursor: default; }
+  #quizFooter button:disabled { opacity: 0.4; }
   #quizFooter button:hover:not(:disabled), #quizRestart:hover { box-shadow: 0 0 14px #00ffff60; }
   #quizResult { margin-top: 10px; background: rgba(0, 255, 160, 0.08); border: 1px solid #09f3; padding: 10px; border-radius: 10px; color: #aef; }
   .hidden { display: none; }
@@ -314,7 +325,7 @@
     left: calc(20px + var(--safe-left));
     top: 50%;
     transform: translateY(-50%);
-    z-index: 16; /* above canvases, below popups */
+    z-index: 16;
     width: clamp(240px, 22vw, 360px);
     aspect-ratio: 3 / 4;
     display: grid;
@@ -359,7 +370,7 @@
     top: 50%;
     transform: translateY(-50%);
     position: fixed;
-    z-index: 14; /* < infoContainer(15) so it stays behind the info boxes */
+    z-index: 14;
     width: clamp(190px, 22vw, 360px);
     height: clamp(420px, 36vh, 520px);
     padding: 10px;
@@ -369,12 +380,12 @@
     box-shadow: 0 0 25px #00ffff30;
     backdrop-filter: blur(6px);
     display: flex;
-    overflow: hidden; /* contains the badge & video edges */
+    overflow: hidden;
   }
   #rightVideoPane .qvid{
     width: 100%;
     height: 100%;
-    object-fit: contain; /* zoomed-out feel; switch to cover if you prefer */
+    object-fit: contain;
     border-radius: 10px;
     outline: 1px solid #0ff3;
     box-shadow: 0 0 10px #00ffff20;
@@ -409,7 +420,6 @@
     text-align: center;
     text-shadow: 0 0 6px #00ffff80;
 
-    cursor: pointer;
     pointer-events: auto;
     user-select: none;
   }
@@ -422,7 +432,7 @@
   #videoDisclaimer{
     position: fixed;
     left: calc(20px + var(--safe-left));
-    top: calc(50% + 230px); /* adjust to sit just below the left pane */
+    top: calc(50% + 230px);
     transform: translateY(-50%);
     z-index: 17;
     color: #00ffff;
@@ -441,188 +451,190 @@
   }
 
   /* Popup content wrapper so layout is clean */
-.popup-content {
-  max-width: 100%;
-}
+  .popup-content {
+    max-width: 100%;
+  }
 
-/* Slideshow inside popup */
-.slideshow {
-  margin-top: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 100%;
-  overflow: hidden;
-}
+  /* Slideshow inside popup */
+  .slideshow {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
 
-/* Slideshow images – constrain size */
-.slideshow img {
-  max-width: 200%;
-  max-height: 290px;    
-  width: auto;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 0 15px #00ffff55;
-  display: none;        /* hidden by default */
-}
+  /* Slideshow images – constrain size */
+  .slideshow img {
+    max-width: 200%;
+    max-height: 290px;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #00ffff55;
+    display: none;
+  }
 
-/* Only the active slide is shown */
-.slideshow img.active {
-  display: block;
-}
+  .slideshow img.active {
+    display: block;
+  }
 
-/* Make sure popup itself never explodes off-screen */
-.popup {
-  max-height: 80vh;
-  overflow-y: auto;
-}
+  .popup {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
 
-/* Close button on its own line, centered */
-.popup .close-btn {
-  display: block;
-  margin: 15px auto 0;
-}
+  .popup .close-btn {
+    display: block;
+    margin: 15px auto 0;
+  }
 
-/* Slideshow is already relative for positioning extras if needed */
-.slideshow {
-  position: relative;
-}
+  .slideshow-progress {
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    bottom: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(0, 255, 255, 0.12);
+    overflow: hidden;
+  }
 
-/* Outer bar */
-.slideshow-progress {
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  bottom: 4px;
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(0, 255, 255, 0.12);
-  overflow: hidden;
-}
+  .slideshow-progress-inner {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00ffff, #00aaff);
+    box-shadow: 0 0 8px #00ffffaa;
+  }
 
-/* Inner filling bar */
-.slideshow-progress-inner {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, #00ffff, #00aaff);
-  box-shadow: 0 0 8px #00ffffaa;
-}
+  .slideshow-progress-animate {
+    animation: slideshowFill var(--slide-interval, 3s) linear forwards;
+  }
 
-/* Animation for one fill cycle */
-.slideshow-progress-animate {
-  animation: slideshowFill var(--slide-interval, 3s) linear forwards;
-}
+  @keyframes slideshowFill {
+    from { width: 0%; }
+    to   { width: 100%; }
+  }
 
-@keyframes slideshowFill {
-  from { width: 0%; }
-  to   { width: 100%; }
-}
+  #topRightLogo {
+    position: fixed;
+    top: calc(20px + var(--safe-top));
+    right: calc(25px + var(--safe-right));
+    z-index: 200;
+    padding: 10px 16px;
+    border-radius: 14px;
+    background: rgba(0, 25, 45, 0.75);
+    border: 1px solid #00ffff80;
+    box-shadow: 0 0 25px #00ffff55;
+    backdrop-filter: blur(6px);
+    animation: logoPulse 4s infinite ease-in-out;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
 
-#topRightLogo {
-  position: fixed;
-  top: calc(20px + var(--safe-top));
-  right: calc(25px + var(--safe-right));
-  z-index: 200;
-  padding: 10px 16px;
-  border-radius: 14px;
-  background: rgba(0, 25, 45, 0.75);
-  border: 1px solid #00ffff80;
-  box-shadow: 0 0 25px #00ffff55;
-  backdrop-filter: blur(6px);
-  cursor: pointer;
-  animation: logoPulse 4s infinite ease-in-out;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
+  #topRightLogo img {
+    width: clamp(40px, 6vw, 130px);
+    filter: drop-shadow(0 0 14px #00ffffc0);
+    user-select: none;
+    pointer-events: none;
+  }
 
-#topRightLogo img {
-  width: clamp(40px, 6vw, 130px);
-  filter: drop-shadow(0 0 14px #00ffffc0);
-  user-select: none;
-  pointer-events: none;
-}
+  #topRightLogo:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 40px #00ffffff;
+  }
 
-/* Hover effect */
-#topRightLogo:hover {
-  transform: scale(1.06);
-  box-shadow: 0 0 40px #00ffffff;
-}
+  @keyframes logoPulse {
+    0%   { box-shadow: 0 0 22px #00ffff55; }
+    50%  { box-shadow: 0 0 45px #00ffffaa; }
+    100% { box-shadow: 0 0 22px #00ffff55; }
+  }
 
-/* Main pulsing glow */
-@keyframes logoPulse {
-  0%   { box-shadow: 0 0 22px #00ffff55; }
-  50%  { box-shadow: 0 0 45px #00ffffaa; }
-  100% { box-shadow: 0 0 22px #00ffff55; }
-}
+  #topRightLogo::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 120%;
+    height: 100%;
+    background: linear-gradient(
+      100deg,
+      transparent 0%,
+      rgba(0,255,255,0.25) 50%,
+      transparent 100%
+    );
+    animation: holoSweep 6s infinite;
+  }
 
-/* Optional hologram sweep */
-#topRightLogo::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -120%;
-  width: 120%;
-  height: 100%;
-  background: linear-gradient(
-    100deg,
-    transparent 0%,
-    rgba(0,255,255,0.25) 50%,
-    transparent 100%
-  );
-  animation: holoSweep 6s infinite;
-}
+  @keyframes holoSweep {
+    0%   { left: -120%; opacity: 0; }
+    10%  { opacity: 1; }
+    40%  { left: 120%; opacity: 0; }
+    100% { left: 120%; opacity: 0; }
+  }
 
-@keyframes holoSweep {
-  0%   { left: -120%; opacity: 0; }
-  10%  { opacity: 1; }
-  40%  { left: 120%; opacity: 0; }
-  100% { left: 120%; opacity: 0; }
-}
+  #soundToggle {
+    position: fixed;
+    bottom: calc(90px + var(--safe-bottom));
+    right: calc(25px + var(--safe-right));
+    width: 45px;
+    height: 45px;
+    background: rgba(0, 255, 255, 0.04);
+    border: 1px solid #00ffff80;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00ffff;
+    font-size: 1.3rem;
+    z-index: 60;
+    box-shadow: 0 0 15px #00ffff40;
+    backdrop-filter: blur(6px);
+    transition: all 0.25s ease;
+  }
 
-#soundToggle {
-  position: fixed;
-  bottom: calc(90px + var(--safe-bottom)); 
-  right: calc(25px + var(--safe-right));
-  width: 45px;
-  height: 45px;
-  background: rgba(0, 255, 255, 0.04);
-  border: 1px solid #00ffff80;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #00ffff;
-  font-size: 1.3rem;
-  cursor: pointer;
-  z-index: 60;
-  box-shadow: 0 0 15px #00ffff40;
-  backdrop-filter: blur(6px);
-  transition: all 0.25s ease;
-}
+  #soundToggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 25px #00ffffff;
+  }
 
-#soundToggle:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 25px #00ffffff;
-}
+  #soundToggle.muted {
+    color: #ff8080;
+    border-color: #ff808080;
+    box-shadow: 0 0 15px #ff808040;
+  }
 
-#soundToggle.muted {
-  color: #ff8080;
-  border-color: #ff808080;
-  box-shadow: 0 0 15px #ff808040;
-}
+  #soundLabel {
+    position: fixed;
+    bottom: calc(90px + var(--safe-bottom));
+    right: calc(85px + var(--safe-right));
+    color: #00ffff;
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(0.9rem, 1.2vw, 1.15rem);
+    text-shadow: 0 0 8px #00ffff, 0 0 16px #00aaff;
+    z-index: 60;
+    opacity: 0.9;
+    pointer-events: none;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+  }
 
-#soundLabel {
-  position: fixed;
-  bottom: calc(90px + var(--safe-bottom));
-  right: calc(85px + var(--safe-right));  /* pushes label left of button */
-  color: #00ffff;
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(0.9rem, 1.2vw, 1.15rem);
-  text-shadow: 0 0 8px #00ffff, 0 0 16px #00aaff;
-  z-index: 60;
-  opacity: 0.9;
-  pointer-events: none; /* label is NOT clickable */
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-}
+  /* === FORCE CLICK CURSOR ON ALL INTERACTIVE ELEMENTS === */
+  #topControls button,
+  #bottomControls button,
+  #quizFooter button,
+  #quizToggle,
+  .quizOption,
+  #quizRestart,
+  #soundToggle,
+  #topRightLogo,
+  #rightPaneBadge,
+  #linkedinContainer,
+  #linkedinLink,
+  .close-btn,
+  a {
+    cursor: url("control_clicker.png") 32 32, pointer !important;
+  }
 
 </style>
 </head>
@@ -637,7 +649,7 @@
 
   <canvas id="matrix"></canvas>
   <canvas id="atom"></canvas>
-
+  
   <!-- LEFT VIDEO PANE (2×2) -->
   <div id="videoPane" aria-label="Quantum video pane">
     <video class="qvid" src="videos/clip1.mp4" autoplay muted loop playsinline preload="metadata" title="Clip 1"></video>
@@ -720,7 +732,6 @@
 <script>
 /* ===== iOS viewport + DPR canvas helpers ===== */
 function setViewportVars() {
-  // Fix iOS 100vh bug by using innerHeight
   const vh = window.innerHeight * 0.01;
   document.documentElement.style.setProperty('--vh', `${vh}px`);
 }
@@ -733,7 +744,6 @@ function sizeCanvasToDisplaySize(canvas, ctx){
   if (canvas.width !== wantedW || canvas.height !== wantedH){
     canvas.width = wantedW;
     canvas.height = wantedH;
-    // Scale drawing ops so we can keep using CSS pixel coords
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
 }
@@ -746,7 +756,6 @@ window.addEventListener('resize', resizeAll, { passive: true });
 window.addEventListener('orientationchange', resizeAll);
 document.addEventListener('DOMContentLoaded', resizeAll);
 
-/* Prevent iOS double-tap zoom on buttons */
 document.addEventListener('touchend', (e) => {
   const now = Date.now();
   if (document.lastTouch && (now - document.lastTouch) < 350) {
@@ -764,7 +773,6 @@ const mctx = matrix.getContext("2d");
 let fontSize = 14, cols, drops, streams;
 
 function initMatrix() {
-  // Dimensions handled by resizeAll(); just recompute columns/drops by CSS size
   const cssWidth  = matrix.clientWidth;
   cols = Math.floor(cssWidth / fontSize);
   drops = Array(cols).fill(0);
@@ -941,17 +949,15 @@ function showPopup(title, html) {
   popupContainer.querySelector(".close-btn").onclick =
     () => popupContainer.innerHTML = "";
 
-  initPopupSlides();   // set up slideshow if one exists
+  initPopupSlides();
 }
 
 document.addEventListener("click", function qcHandler(e) {
   const vid = document.getElementById("qcVideo");
   const btn = document.getElementById("qcAudioBtn");
 
-  // Only run when the popup is open
   if (!vid || !btn) return;
 
-  // If user clicked the button
   if (e.target === btn) {
     vid.muted = false;
     vid.play().catch(err => console.warn(err));
@@ -961,7 +967,6 @@ document.addEventListener("click", function qcHandler(e) {
     btn.style.borderColor = "#ff8080";
     btn.style.textShadow = "0 0 8px #ff8080";
 
-    // Toggle mute on further clicks
     btn.onclick = () => {
       vid.muted = !vid.muted;
       if (vid.muted) {
@@ -977,11 +982,9 @@ document.addEventListener("click", function qcHandler(e) {
       }
     };
 
-    // Remove handler to avoid multiple binds
     document.removeEventListener("click", qcHandler);
   }
 });
-
 
 function initPopupSlides() {
   const container = popupContainer.querySelector('.slideshow');
@@ -993,9 +996,8 @@ function initPopupSlides() {
   const progressOuter = container.querySelector('.slideshow-progress');
   const progressInner = container.querySelector('.slideshow-progress-inner');
 
-  const INTERVAL_MS = 3000; // 3 seconds per slide
+  const INTERVAL_MS = 3000;
 
-  // expose time to CSS (for animation duration)
   if (progressOuter) {
     progressOuter.style.setProperty('--slide-interval', `${INTERVAL_MS}ms`);
   }
@@ -1004,31 +1006,25 @@ function initPopupSlides() {
   imgs.forEach(img => img.classList.remove('active'));
   imgs[0].classList.add('active');
 
-  // function to restart progress bar animation
   function restartProgress() {
     if (!progressInner) return;
     progressInner.classList.remove('slideshow-progress-animate');
-    // force reflow to reset the CSS animation
     void progressInner.offsetWidth;
     progressInner.classList.add('slideshow-progress-animate');
   }
 
-  // start first fill
   restartProgress();
 
   const interval = setInterval(() => {
-    // if popup is closed, stop
     if (!document.body.contains(container)) {
       clearInterval(interval);
       return;
     }
 
-    // next slide
     imgs[idx].classList.remove('active');
     idx = (idx + 1) % imgs.length;
     imgs[idx].classList.add('active');
 
-    // restart loading bar
     restartProgress();
   }, INTERVAL_MS);
 }
@@ -1054,7 +1050,6 @@ btnGoodbye.onclick = () => showPopup(
     within engineering.
   </p>
 
-  <!-- AUDIO BUTTON -->
   <div id="gbAudioBtn"
        style="
          margin: 10px auto 5px;
@@ -1063,7 +1058,6 @@ btnGoodbye.onclick = () => showPopup(
          border: 1px solid #0ff;
          border-radius: 6px;
          width: fit-content;
-         cursor: pointer;
          color: #0ff;
          text-shadow: 0 0 8px #0ff;
          font-family: 'Orbitron', monospace;
@@ -1071,7 +1065,6 @@ btnGoodbye.onclick = () => showPopup(
     🔊 Enable Video Audio
   </div>
 
-  <!-- VIDEO -->
   <div style="margin-top:10px; display:flex; justify-content:center;">
     <video
       id="gbVideo"
@@ -1101,7 +1094,6 @@ btnWhere.onclick = () => showPopup(
     into engineered systems that can measure gravity, acceleration, and time with
     unprecedented precision.
   </p>
-  <!-- Venn Diagram -->
   <div style="
     margin-top:20px;
     display:flex;
@@ -1123,7 +1115,6 @@ btnWhere.onclick = () => showPopup(
        ">
   </div>
 
-  
   <p>
     The work contributes directly to next-generation quantum gravimeters and navigation
     systems — sensors capable of detecting underground structures, geological layers,
@@ -1138,8 +1129,6 @@ btnWhere.onclick = () => showPopup(
     optical platforms that make it usable in the real world.
   </p>
 
-
-  <!-- Logos -->
   <div style="display:flex;justify-content:center;align-items:center;gap:18px;flex-wrap:wrap;margin-top:8px;">
     <img src="QuSIT_Logo.png" alt="QuSIT logo"
          style="max-height:60px;max-width:45%;height:auto;filter:drop-shadow(0 0 8px #00ffff);">
@@ -1147,7 +1136,6 @@ btnWhere.onclick = () => showPopup(
          style="max-height:60px;max-width:45%;height:auto;filter:drop-shadow(0 0 8px #00ffff);">
   </div>
 
-  <!-- External Links Section -->
   <div style="margin-top:10px;text-align:center;font-family:'Orbitron',monospace;color:#0ff;">
     <div style="margin-bottom:6px;">Links to the official sites:</div>
 
@@ -1177,7 +1165,6 @@ btnWhere.onclick = () => showPopup(
   `
 );
 
-
 btnQuantum.onclick = () => showPopup(
   "What is Quantum Control?",
   `
@@ -1199,7 +1186,6 @@ btnQuantum.onclick = () => showPopup(
     this work a real-world control engineering challenge at the quantum scale.
   </p>
 
-  <!-- AUDIO TOGGLE BUTTON -->
   <div id="qcAudioBtn"
        style="
          margin: 10px auto 5px;
@@ -1208,7 +1194,6 @@ btnQuantum.onclick = () => showPopup(
          border: 1px solid #0ff;
          border-radius: 6px;
          width: fit-content;
-         cursor: pointer;
          color: #0ff;
          text-shadow: 0 0 8px #0ff;
          font-family: 'Orbitron', monospace;
@@ -1216,7 +1201,6 @@ btnQuantum.onclick = () => showPopup(
     🔊 Enable Video Audio
   </div>
 
-  <!-- VIDEO -->
   <div style="margin-top:10px; display:flex; justify-content:center;">
     <video
       id="qcVideo"
@@ -1265,7 +1249,6 @@ btnInterf.onclick = () => showPopup(
     <img src="stray_interferometer_3.jpg" alt="interferometer - stray - QuSIT">
     <img src="boat_trial.jpg" alt="boat - QuSIT">
 
-    <!-- tiny loading bar -->
     <div class="slideshow-progress">
       <div class="slideshow-progress-inner"></div>
     </div>
@@ -1284,7 +1267,6 @@ btnToolbox.onclick = () => showPopup(
   controlled conditions. Mechanical design and fabrication use CNC machining, FDM, resin, and powder 3D printing to build compact optical and electronic housings.
   Every iteration is measured, tuned, and optimized — fusing photonics, control theory, and hardware engineering into one coherent system.</p>
 
-  <!-- VIDEO -->
   <div style="margin-top:20px; display:flex; justify-content:center;">
     <video 
       src="videos/toolbox_demo.mp4"
@@ -1298,15 +1280,13 @@ btnToolbox.onclick = () => showPopup(
         border-radius: 12px;
         outline: 1px solid rgba(0,255,255,0.4);
         box-shadow: 0 0 15px rgba(0,255,255,0.3);
-        pointer-events: none; /* makes the video unclickable */
+        pointer-events: none;
       ">
     </video>
   </div>
   `
 );
 
-
-/* Make the right badge trigger the existing Goodbye popup */
 const rightPaneBadge = document.getElementById('rightPaneBadge');
 if (rightPaneBadge && typeof btnGoodbye?.click === 'function') {
   rightPaneBadge.addEventListener('click', () => btnGoodbye.click());
@@ -1321,40 +1301,33 @@ document.body.addEventListener("click", () => {
   }
 }, { once: true });
 
-
 const toggleBtn = document.getElementById("soundToggle");
 const audio = document.getElementById("quantumLoop");
 
 toggleBtn.addEventListener("click", (e) => {
-  e.stopPropagation(); // prevent triggering the page click that starts audio
+  e.stopPropagation();
 
   if (audio.muted) {
     audio.muted = false;
-    toggleBtn.textContent = "🔊";   // unmuted icon
+    toggleBtn.textContent = "🔊";
     toggleBtn.classList.remove("muted");
   } else {
     audio.muted = true;
-    toggleBtn.textContent = "🔇";   // muted icon
+    toggleBtn.textContent = "🔇";
     toggleBtn.classList.add("muted");
   }
 });
-
 </script>
- 
-
 
 <script>
 /* ===== VIDEO PANE LOGIC (targets ALL .qvid videos, left + right) ===== */
 (function(){
   const vids = Array.from(document.querySelectorAll('video.qvid'));
 
-  // Try to start playback politely (muted+playsinline already helps)
   const tryPlayAll = () => vids.forEach(v => v.play().catch(()=>{}));
 
-  // Reuse the first body click gesture you already rely on for audio
   document.body.addEventListener('click', tryPlayAll, { once: true });
 
-  // Tap a video to toggle its mute state
   vids.forEach(v => {
     v.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -1364,14 +1337,11 @@ toggleBtn.addEventListener("click", (e) => {
     });
   });
 
-  // Pause when hidden, resume when visible (saves CPU/GPU)
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) vids.forEach(v => v.pause());
     else tryPlayAll();
   });
 })();
-
-
 
 document.addEventListener("click", function gbHandler(e) {
   const vid = document.getElementById("gbVideo");
@@ -1379,7 +1349,6 @@ document.addEventListener("click", function gbHandler(e) {
 
   if (!vid || !btn) return;
 
-  // User clicked the enable-audio button
   if (e.target === btn) {
     vid.muted = false;
     vid.play().catch(err => console.warn(err));
@@ -1389,7 +1358,6 @@ document.addEventListener("click", function gbHandler(e) {
     btn.style.borderColor = "#ff8080";
     btn.style.textShadow = "0 0 8px #ff8080";
 
-    // Toggle mute/unmute on further clicks
     btn.onclick = () => {
       vid.muted = !vid.muted;
       if (vid.muted) {
@@ -1408,12 +1376,6 @@ document.addEventListener("click", function gbHandler(e) {
     document.removeEventListener("click", gbHandler);
   }
 });
-
-
-
-
-
-
 </script>
 
 <script>
@@ -1528,11 +1490,9 @@ function renderQuiz() {
     return;
   }
 
-  // Ensure navigation buttons are active again after restart
   quizEls.prev.disabled = (i === 0);
   quizEls.next.disabled = false;
 
-  // Normal question
   const item = quizData[i];
   quizEls.question.textContent = item.q;
   quizEls.options.innerHTML = "";
@@ -1568,7 +1528,6 @@ quizEls.next.onclick = () => {
   if (i < quizData.length - 1) {
     quizState.i++;
   } else {
-    // finish + score
     let s = 0;
     quizData.forEach((q, idx) => { if (q.a === quizState.answers[idx]) s++; });
     quizState.score = s;
@@ -1582,7 +1541,6 @@ quizEls.restart.onclick = () => {
   renderQuiz(); saveQuiz();
 };
 
-// expand/collapse
 quizEls.toggle.onclick = () => {
   const isCollapsed = quizEls.widget.classList.toggle("quiz-collapsed");
   quizEls.toggle.textContent = isCollapsed ? "▼" : "▲";

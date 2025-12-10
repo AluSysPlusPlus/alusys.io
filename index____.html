@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alushi Systems | AluSys++</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="LOGO.png">
+</head>
+
+<canvas id="matrixCanvas"></canvas>
+<script>
+  const canvas = document.getElementById("matrixCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const letters = "01";
+  const fontSize = 16;
+  const columns = canvas.width / fontSize;
+  const drops = Array.from({ length: columns }, () => 1);
+
+  function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#00ff88";
+    ctx.font = `${fontSize}px monospace`;
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawMatrix, 33);
+
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
+
+
+
+<body>
+  <header>
+    <div class="header-content">
+      <img src="LOGO.PNG" alt="Alushi Systems Logo" class="logo" />
+      <div class="header-text">
+        <h1>AluSys++</h1>
+        <p class="tagline">&gt;&gt; Intelligent Inputs ++ Powerful Outputs &lt;&lt;</p>
+      </div>
+    </div>
+  </header>
+
+  <nav class="navbar">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="Electronic.html">Electronics</a></li>
+      <li><a href="c.html">C</a></li>
+      <li><a href="cpp.html">C++</a></li>
+      <li><a href="csharp.html">C#</a></li>
+      <li><a href="matlab.html">MATLAB</a></li>
+      <li><a href="ICS.html">ICS</a></li>
+      <li><a href="robotics.html">Robotics</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <section class="notice glow-box">
+      <h2>🚧 Page Under Development</h2>
+      <p>Welcome to AluSys++.</p>
+      <p>Offering bespoke Control, Electronics & Software Engineering solutions.</p>
+      <p>Stay tuned for more...</p>
+    </section>
+
+    <section class="services glow-box">
+      <h2>💻 Services</h2>
+      <ul>
+        <li>C, C++ Programming</li>
+        <li>MATLAB / Simulink Modelling & Control</li>
+        <li>Electronics & PCB Design</li>
+        <li>Industrial Control (Siemens Simatic / TIA)</li>
+        <li>Engineering, Scientific, Physics Calculations & Mathematics</li>
+        <li>Embedded Systems Development</li>
+        <li>Electronic Engineering & Simulation</li>
+        <li>C# / .NET</li>
+        <li>Consultancy & Support</li>
+      </ul>
+    </section>
+
+    <section class="skills glow-box">
+      <h2>🧠 Core Elements</h2>
+      <div class="skills-grid">
+        <div>
+          <h3>Control Engineering</h3>
+          <ul>
+            <li>Open-loop, feedback & optimisation strategies</li>
+            <li>Model-Based Systems Engineering (MBSE)</li>
+            <li>First principles & data-driven modelling</li>
+            <li>HIL, MIL, SIL environments</li>
+            <li>DAQ and signal processing</li>
+            <li>IEC 61131-3 Industrial Control</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Software</h3>
+          <ul>
+            <li>MATLAB (Simulink, Stateflow, Simscape)</li>
+            <li>C, C++, Assembly, Python</li>
+            <li>Altium, KiCAD</li>
+            <li>Proteus</li>
+            <li>MPLAB, Visual Studio, Code::Blocks</li>
+            <li>NI LabVIEW</li>
+            <li>ABB RobotStudio</li>
+            <li>Version Control (Git)</li>
+            <li>Windows & Linux</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Electronics</h3>
+          <ul>
+            <li>Embedded system design</li>
+            <li>Sensor/actuator integration</li>
+            <li>Fault handling & control logic</li>
+            <li>Microcontroller programming</li>
+            <li>Circuit design & simulation</li>
+          </ul>
+        </div>
+        <div>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact glow-box">
+      <h3>Who is "Alushi"?</h3>
+          <ul>
+            <li>Industrial Control Engineering since 2018</li>
+            <li>First Class Bachelor of Engineering (BEng) in Electronic Engineering with Honours</li>
+            <li>Master of Science (MSc) in Control, Automation, and Artificial Intelligence with Distinction</li>
+            <li>Member of the Institute of Engineering and Technology (MIET)</li>
+            <li>IET Prize winner</li>
+            <li>Researcher in Electronic, Electrical and Systems Engineering</li>
+          </ul>
+      <h2>📨 Contact</h2>
+      <p>Email: <a href="mailto:dev@alusys.io">dev@alusys.io</a></p>
+      <p>GitHub: <a href="https://github.com/AluSysPlusPlus" target="_blank">github.com/AluSysPlusPlus</a></p>
+      <p>LinkedIn: <a href="https://www.linkedin.com/in/luca-alushi/" target="_blank">Director of AluSys++</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Alushi Systems Limited</p>
+  </footer>
+</body>
+</html>
