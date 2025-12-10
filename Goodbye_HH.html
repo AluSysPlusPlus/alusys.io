@@ -1549,5 +1549,18 @@ quizEls.toggle.onclick = () => {
 renderQuiz();
 </script>
 
+<script>
+  const topRightLogo = document.getElementById('topRightLogo');
+
+  if (topRightLogo) {
+    topRightLogo.addEventListener('click', () => {
+      window.location.href = 'index.html';   // or './index.html' if you prefer
+    });
+  }
+</script>
+
+
+
+
 </body>
 </html>
